@@ -4,18 +4,19 @@ import java.util.Stack;
 
 public class Board {
 
-    //2d array of stack<Gobblet>
+    // 2d array of stack<Gobblet>
     private Stack<Gobblet>[][] board;
 
     public Board() {
         board = new Stack[4][4];
     }
 
-    //boolean isWinningState(){}
+    // boolean isWinningState(){}
     void playRound(GameMove move){
-        //edit the 2d array in the board
-        //move the gobblet from x1,y1 to x2,y2
-        //-1,-1 means outside the board
+        // edit the 2d array in the board
+        // move the gobblet from x1,y1 to x2,y2
+        // -1,-1 means outside the board
+        // should pop from the gobblet stacks
     }
 
     Gobblet getFront(int x, int y){

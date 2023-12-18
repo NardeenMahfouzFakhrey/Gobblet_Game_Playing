@@ -8,5 +8,4 @@ public class Game {
     //turn (0 or 1)
     //difficulty mode (easy / normal / hard )
 
-
 }

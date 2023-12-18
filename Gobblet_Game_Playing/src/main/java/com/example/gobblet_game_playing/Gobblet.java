@@ -4,10 +4,14 @@ public class Gobblet {
 
     private GobbletColor gobbletColor;
     private GobbletSize gobbletSize;
+    private int x;
+    private int y;
 
-    public Gobblet(GobbletColor gobbletColor, GobbletSize gobbletSize) {
+    public Gobblet(GobbletColor gobbletColor, GobbletSize gobbletSize, int x, int y) {
         this.gobbletColor = gobbletColor;
         this.gobbletSize = gobbletSize;
+        this.x = x;
+        this.y = y;
     }
 
     public GobbletColor getGobbletColor() {
@@ -25,5 +29,22 @@ public class Gobblet {
     public void setGobbletSize(GobbletSize gobbletSize) {
         this.gobbletSize = gobbletSize;
     }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public int getY() {
+        return y;
+    }
+
 
 }
