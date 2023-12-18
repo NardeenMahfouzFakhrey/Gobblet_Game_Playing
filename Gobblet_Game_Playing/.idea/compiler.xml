@@ -9,8 +9,5 @@
         <module name="Gobblet_Game_Playing" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Gobblet_Game_Playing" target="18" />
-    </bytecodeTargetLevel>
   </component>
 </project>
