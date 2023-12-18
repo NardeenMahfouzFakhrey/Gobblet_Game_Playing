@@ -8,9 +8,5 @@ public class Game {
     //turn (0 or 1)
     //difficulty mode (easy / normal / hard )
 
-    void playRound(GameMove move){
-        //edit the 2d array in the board
-        //move the gobblet from x1,y1 to x2,y2
-        //-1,-1 means outside the board
-    }
+
 }
