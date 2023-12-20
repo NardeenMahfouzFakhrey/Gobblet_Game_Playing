@@ -94,12 +94,8 @@ public class HumanPlayer extends Player {
                     if (counter == 3) {
                         return true;
                     }
-
                 }
-
             }
-
-
         }
 
         return false;

@@ -4,8 +4,8 @@ import java.util.Stack;
 
 public abstract class Player {
 
-    String name;
-    Stack<Gobblet>[] gobblets;
+    private String name;
+    private Stack<Gobblet>[] gobblets;
 
     public Player(){
 

@@ -11,7 +11,11 @@ public class Board {
         board = new Stack[4][4];
     }
 
-    // boolean isWinningState(){}
+    boolean isWinningState(){
+        return false;
+    }
+
+
     void playRound(GameMove move){
         // edit the 2d array in the board
         // move the gobblet from x1,y1 to x2,y2
