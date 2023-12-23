@@ -1,5 +1,7 @@
 package com.example.gobblet_game_playing;
 
+import java.util.Stack;
+
 public class HumanPlayer extends Player {
 
     private GameMove currentMove = null;
@@ -12,8 +14,11 @@ public class HumanPlayer extends Player {
     public boolean playGobbletMove(GameMove move, Board board) {
 
         if(isValidMove(move, board)){
-
+            if(move.getGobblet().getX() == -1 && move.getGobblet().getY() == -1){
+                gobblets[move.getStackNo()].pop();
+            }
             board.playRound(move);
+
             return true;
 
         }
@@ -44,19 +49,18 @@ public class HumanPlayer extends Player {
 
         for (int j = 0; j < 4; j++) {
 
-            if (board.getFront(x, j).getGobbletColor() != gobbletColor) {
+            if (board.getFront(x, j)!= null && board.getFront(x, j).getGobbletColor() != gobbletColor) {
                 counter++;
             }
             if (counter == 3) {
                 return true;
             }
         }
-
         counter = 0;
 
         for (int i = 0; i < 4; i++) {
 
-            if (board.getFront(i, y).getGobbletColor() != gobbletColor) {
+            if (board.getFront(i, y) != null && board.getFront(i, y).getGobbletColor() != gobbletColor) {
                 counter++;
             }
             if (counter == 3) {
@@ -71,7 +75,7 @@ public class HumanPlayer extends Player {
 
             for (int i = 0; i < 4; i++) {
 
-                if (board.getFront(i, i).getGobbletColor() != gobbletColor) {
+                if (board.getFront(i, i) != null && board.getFront(i, i).getGobbletColor() != gobbletColor) {
                     counter++;
                 }
                 if (counter == 3) {
@@ -88,7 +92,7 @@ public class HumanPlayer extends Player {
 
                     System.out.println(i + " " + (3 - i));
 
-                    if (board.getFront(i, 3 - i).getGobbletColor() != gobbletColor) {
+                    if (board.getFront(i, 3 - i) != null && board.getFront(i, 3 - i).getGobbletColor() != gobbletColor) {
                         counter++;
                     }
                     if (counter == 3) {
@@ -106,6 +110,10 @@ public class HumanPlayer extends Player {
         boolean isValid = true;
         boolean isOffBoard = false;
 
+        if(move.getGobblet().getGobbletColor().ordinal() != playerColor.ordinal()){
+            return false;
+        }
+
         Gobblet substitutedGobblet = board.getFront(move.getX(), move.getY());
 
         if (substitutedGobblet == null) {
@@ -119,7 +127,11 @@ public class HumanPlayer extends Player {
         }
 
         if (move.getGobblet().getX() == -1 && move.getGobblet().getY() == -1) {
-            isOffBoard = true;
+            if(gobblets[move.getStackNo()].peek() != null && gobblets[move.getStackNo()].peek().getGobbletSize() == move.getGobblet().getGobbletSize()){
+                isOffBoard = true;
+            }else{
+                return false;
+            }
         }
 
         if (isOffBoard) {

@@ -9,7 +9,13 @@ public class Board {
 
     /* 4 stacks each has 4 gobblets*/
     public Board() {
+
         board = new Stack[4][4];
+        for(int i=0; i<4; i++){
+            for(int j=0; j<4; j++){
+                board[i][j] = new Stack<>();
+            }
+        }
     }
 
     /**
@@ -90,9 +96,13 @@ public class Board {
         if (x1 != -1 && y1 != -1) {
             // onBoard = true;
             gobblet = board[x1][y1].pop();
+            System.out.println(x1);
+            System.out.println(y1);
         }
 
         /* Place the gobblet at the new position */
+        gobblet.setX(x2);
+        gobblet.setY(y2);
         board[x2][y2].push(gobblet);
 
         /* todo if pop from player's stack is to be handled here:
@@ -120,5 +130,29 @@ public class Board {
             System.out.println("Board: Invalid Position");
             return null;
         }
+    }
+
+    void printBoard(){
+
+        for(int i = 0; i < board.length; i++){
+
+            for(int j = 0; j < board.length; j++){
+                if(!board[i][j].isEmpty())
+                    System.out.print(board[i][j].peek().getGobbletSize().ordinal() + " ");
+                else{
+                    System.out.print("-1 ");
+                }
+            }
+            System.out.println();
+
+        }
+    }
+
+    public Stack<Gobblet>[][] getBoard() {
+        return board;
+    }
+
+    public void setBoard(Stack<Gobblet>[][] board) {
+        this.board = board;
     }
 }

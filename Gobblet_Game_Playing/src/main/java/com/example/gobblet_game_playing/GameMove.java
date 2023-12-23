@@ -4,12 +4,13 @@ public class GameMove {
     private Gobblet gobblet;
     private int x;
     private int y;
+    private int stackNo;
 
-    public GameMove(Gobblet gobblet, int x, int y) {
+    public GameMove(Gobblet gobblet, int x, int y, int stackNo) {
         this.gobblet = gobblet;
         this.x = x;
         this.y = y;
-
+        this.stackNo = stackNo;
     }
 
     public Gobblet getGobblet() {
@@ -36,5 +37,11 @@ public class GameMove {
         this.y = y;
     }
 
-    
+    public int getStackNo() {
+        return stackNo;
+    }
+
+    public void setStackNo(int stackNo) {
+        this.stackNo = stackNo;
+    }
 }

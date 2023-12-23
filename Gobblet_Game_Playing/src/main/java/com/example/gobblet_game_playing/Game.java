@@ -8,26 +8,59 @@ public class Game {
     private Board board;
     private Player winner;
     private PlayerPair players;
+    private long turnStartTime;
+    private long turnTimeLimitMillis;
+    private Turn currentTurn;
+    private GameMove currentGameMove;
+    private Difficulty gameDifficulty;
 
-    enum Turn{
+    public enum Turn{
         A,
         B
     };
 
-    enum Difficulty{
+    public enum Difficulty{
         EASY,
         NORMAL,
         HARD
     };
 
+    public enum PlayerType{
+        HUMAN,
+        COMPUTER
+    };
 
-    private long turnStartTime;
 
-    private long turnTimeLimitMillis;
 
-    private Turn currentTurn;
 
-    private Difficulty gameDifficulty;
+    public Game(PlayerType t1, String name1, PlayerType t2, String name2, Difficulty gameDifficulty) {
+        board = new Board();
+        Player p1 = null;
+        if(t1 == PlayerType.HUMAN){
+            p1 = new HumanPlayer(name1, GobbletColor.WHITE);
+        }else if(t1 == PlayerType.COMPUTER){
+            this.gameDifficulty = gameDifficulty;
+            p1 = new ComputerPlayer(name1, GobbletColor.WHITE, this.gameDifficulty);
+        }
+
+        Player p2 = null;
+        if(t2 == PlayerType.HUMAN){
+            p2 = new HumanPlayer(name1, GobbletColor.BLACK);
+        }else if(t2 == PlayerType.COMPUTER){
+            this.gameDifficulty = gameDifficulty;
+            p2 = new ComputerPlayer(name1, GobbletColor.BLACK, this.gameDifficulty);
+        }
+        if(p1 != null && p2 != null){
+            players = new PlayerPair(p1, p2);
+        }else{
+            System.out.println("ERROR: fail to create the players");
+        }
+
+        currentTurn = Turn.A;
+
+    }
+
+
 
     /** setters and getters
      */
@@ -39,7 +72,6 @@ public class Game {
     public void setBoard(Board board) {
         this.board = board;
     }
-
 
     public Player getWinner() {
         return winner;
@@ -73,6 +105,11 @@ public class Game {
     public void setTurnStartTime(long turnStartTime) {
         this.turnStartTime = turnStartTime;
     }
+
+    public GameMove getCurrentGameMove() {
+        return currentGameMove;
+    }
+
 
 
     /**
@@ -108,4 +145,49 @@ public class Game {
         long currentTime = System.currentTimeMillis();
         return (currentTime - turnStartTime) > turnTimeLimitMillis;
     }
+
+    public boolean setCurrentGameMove(int x1, int y1, int x2, int y2, int stackNo) {
+
+        Gobblet gobblet;
+        if(x1==-1 && y1==-1){
+            if(currentTurn.ordinal()==0){
+                 gobblet = players.getPlayer1().getGobblets()[stackNo].peek();
+            }else{
+                 gobblet = players.getPlayer2().getGobblets()[stackNo].peek();
+            }
+        }else if(!board.getBoard()[x1][y1].isEmpty()){
+            gobblet = board.getBoard()[x1][y1].peek();
+        }else{
+            return false;
+        }
+
+        GameMove move = new GameMove(gobblet, x2, y2, stackNo);
+
+        if(currentTurn.ordinal()==0){
+            boolean flag = ((HumanPlayer) players.getPlayer1()).playGobbletMove(move, board);
+            if(isGameEnded()){
+                if(currentTurn.ordinal()==0){
+                    winner =  players.getPlayer1();
+                }else{
+                    winner =  players.getPlayer2();
+                }
+            }
+            return flag;
+        }else{
+            boolean flag = ((HumanPlayer) players.getPlayer2()).playGobbletMove(move, board);
+            if(isGameEnded()){
+                if(currentTurn.ordinal()==0){
+                    winner =  players.getPlayer1();
+                }else{
+                    winner =  players.getPlayer2();
+                }
+            }
+            return flag;
+        }
+
+
+    }
+
+
+
 }
