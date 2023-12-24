@@ -42,8 +42,8 @@ public class HumanPlayer extends Player {
     private boolean checkNeighboringGobblets(Board board, GameMove move) {
 
         GobbletColor gobbletColor = move.getGobblet().getGobbletColor();
-        int x = move.getGobblet().getX();
-        int y = move.getGobblet().getY();
+        int x = move.getX();
+        int y = move.getY();
 
         int counter = 0;
 

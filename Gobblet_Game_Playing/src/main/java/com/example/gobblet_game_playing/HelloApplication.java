@@ -38,7 +38,7 @@ public class HelloApplication extends Application {
 
         System.out.println("Start Game");
 
-        while(true){
+        while(!game.isGameEnded()){
             if(players[game.getCurrentTurn().ordinal()].ordinal() == Game.PlayerType.HUMAN.ordinal()){
                 System.out.println("Enter you next Move: ");
 
@@ -70,6 +70,6 @@ public class HelloApplication extends Application {
 
         }
 
-//        System.out.println("Winner is " + game.getWinner().name);
+        System.out.println("Winner is " + game.getWinner().name);
     }
 }
