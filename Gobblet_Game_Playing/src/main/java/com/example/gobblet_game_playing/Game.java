@@ -45,10 +45,10 @@ public class Game {
 
         Player p2 = null;
         if(t2 == PlayerType.HUMAN){
-            p2 = new HumanPlayer(name1, GobbletColor.BLACK);
+            p2 = new HumanPlayer(name2, GobbletColor.BLACK);
         }else if(t2 == PlayerType.COMPUTER){
             this.gameDifficulty = gameDifficulty;
-            p2 = new ComputerPlayer(name1, GobbletColor.BLACK, this.gameDifficulty);
+            p2 = new ComputerPlayer(name2, GobbletColor.BLACK, this.gameDifficulty);
         }
         if(p1 != null && p2 != null){
             players = new PlayerPair(p1, p2);

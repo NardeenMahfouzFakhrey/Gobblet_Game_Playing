@@ -61,11 +61,11 @@ public class Board {
             return false;
         }
 
-        for (int i = startX+1; i <= endX; i++) {
-            for (int j = startY+1; j <= endY; j++) {
+        for (int i = startX; i <= endX; i++) {
+            for (int j = startY; j <= endY; j++) {
                 Gobblet currentGobblet = getFront(i, j);
 
-                if (currentGobblet == null || !currentGobblet.getGobbletColor().equals(firstGobblet.getGobbletColor())) {
+                if (currentGobblet == null || (currentGobblet.getGobbletColor()!=firstGobblet.getGobbletColor())) {
                     return false;
                 }
             }
