@@ -151,9 +151,9 @@ public class Game {
         Gobblet gobblet;
         if(x1==-1 && y1==-1){
             if(currentTurn.ordinal()==0){
-                 gobblet = players.getPlayer1().getGobblets()[stackNo].peek();
+                 gobblet = board.getPlayersGobblets()[0][stackNo].peek();
             }else{
-                 gobblet = players.getPlayer2().getGobblets()[stackNo].peek();
+                 gobblet = board.getPlayersGobblets()[1][stackNo].peek();
             }
         }else if(!board.getBoard()[x1][y1].isEmpty()){
             gobblet = board.getBoard()[x1][y1].peek();
@@ -188,6 +188,35 @@ public class Game {
 
     }
 
+    public GameMove getComputerMove(){
+        if(currentTurn.ordinal()==0){
+            GameMove move = ((ComputerPlayer) players.getPlayer1()).playGobbletMove(this.board);
+            if(isGameEnded()){
+                if(currentTurn.ordinal()==0){
+                    winner =  players.getPlayer1();
+                }else{
+                    winner =  players.getPlayer2();
+                }
+            }
+            board.playRound(move, currentTurn);
+            return move;
+        }else{
+            GameMove move = ((ComputerPlayer) players.getPlayer2()).playGobbletMove(this.board);
+            if(isGameEnded()){
+                if(currentTurn.ordinal()==0){
+                    winner =  players.getPlayer1();
+                }else{
+                    winner =  players.getPlayer2();
+                }
+            }
+            System.out.println(move.getGobblet().getX());
+            System.out.println(move.getGobblet().getY());
+            System.out.println(move.getX());
+            System.out.println(move.getY());
+            board.playRound(move, currentTurn);
+            return move;
+        }
+    }
     public static void testGUI(int x1, int y1, int x2, int y2, int stackNo) {
         System.out.println("x1 = " + x1);
         System.out.println("y1 = " + y1);

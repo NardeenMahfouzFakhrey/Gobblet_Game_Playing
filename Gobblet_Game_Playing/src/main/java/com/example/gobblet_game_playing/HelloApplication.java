@@ -21,14 +21,14 @@ public class HelloApplication extends Application {
     public void start(Stage stage) throws IOException {
         BoardGUI.DrawBorad(stage);
         ControllerGUI controllerGUI = new ControllerGUI();
-        for(int i=0 ; i<3 ; i++){
-            for(int j=0 ; j<4 ; j++){
-                controllerGUI.InitUi(BoardGUI.whiteImages[i][j],"W",i,j);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 4; j++) {
+                controllerGUI.InitUi(BoardGUI.whiteImages[i][j], "W", i, j);
             }
         }
-        for(int i=0 ; i<3 ; i++){
-            for(int j=0 ; j<4 ; j++){
-                controllerGUI.InitUi(BoardGUI.blackImages[i][j],"B",i,j);
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 4; j++) {
+                controllerGUI.InitUi(BoardGUI.blackImages[i][j], "B", i, j);
             }
         }
     }
@@ -42,19 +42,20 @@ public class HelloApplication extends Application {
         Scanner sc = new Scanner(System.in);
 
         Game.PlayerType type1 = Game.PlayerType.HUMAN;
-        Game.PlayerType type2 = Game.PlayerType.HUMAN;
+        Game.PlayerType type2 = Game.PlayerType.COMPUTER;
 
         Game.PlayerType players[] = new Game.PlayerType[2];
         players[0] = type1;
         players[1] = type2;
         //Game.Turn turn = Game.Turn.A;
 
-        Game game = new Game(type1, "karine", type2, "Tantawy", null);
-
+        Game game = new Game(type1, "karine", type2, "Tantawy", Game.Difficulty.HARD);
         System.out.println("Start Game");
 
-        while(!game.isGameEnded()){
-            if(players[game.getCurrentTurn().ordinal()].ordinal() == Game.PlayerType.HUMAN.ordinal()){
+        while (true) {
+
+
+            if (players[game.getCurrentTurn().ordinal()].ordinal() == Game.PlayerType.HUMAN.ordinal()) {
                 System.out.println("Enter you next Move: ");
 
                 System.out.print("x1 : ");
@@ -62,10 +63,10 @@ public class HelloApplication extends Application {
                 System.out.print("y1 : ");
                 int y1 = sc.nextInt();
                 int stackNo;
-                if(x1==-1 && y1==-1) {
+                if (x1 == -1 && y1 == -1) {
                     System.out.print("stackNo : ");
                     stackNo = sc.nextInt();
-                }else{
+                } else {
                     stackNo = -1;
                 }
                 System.out.print("x2 : ");
@@ -73,18 +74,32 @@ public class HelloApplication extends Application {
                 System.out.print("y2 : ");
                 int y2 = sc.nextInt();
 
-                if(game.setCurrentGameMove(x1, y1, x2, y2, stackNo))
+                if (game.setCurrentGameMove(x1, y1, x2, y2, stackNo))
                     game.switchTurn();
-                else{
+                else {
                     System.out.println("invalid move try again");
                 }
                 game.getBoard().printBoard();
-            }else{
-
+            } else {
+                GameMove move = game.getComputerMove();
+                game.switchTurn();
+                System.out.println("Computer Move: ");
+                System.out.println("Gobblet: " + move.getGobblet().getGobbletSize().ordinal() + " (" + move.getGobblet().getX() + "," + move.getGobblet().getY() + ") -> (" + move.getX() + "," + move.getY() + ")");
+                game.getBoard().printBoard();
             }
-
         }
-
-        System.out.println("Winner is " + game.getWinner().name);
     }
 }
+//    public static void main(String[] args) {
+//
+//
+//        Game g = new Game(Game.PlayerType.COMPUTER, "karine", Game.PlayerType.HUMAN, "Tantawy", Game.Difficulty.HARD);
+//        ((ComputerPlayer) g.getPlayers().getPlayer1()).setSearchDepth(4);
+//        ((ComputerPlayer) g.getPlayers().getPlayer1()).minMax(g.getBoard(), Game.Turn.A, 4, true);
+//
+//        System.out.println();
+//        System.out.println(((ComputerPlayer) g.getPlayers().getPlayer1()).counter);
+//
+//    }
+//
+//}

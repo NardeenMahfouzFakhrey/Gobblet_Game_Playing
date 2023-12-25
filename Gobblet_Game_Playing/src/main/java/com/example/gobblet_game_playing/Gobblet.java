@@ -14,6 +14,13 @@ public class Gobblet {
         this.y = y;
     }
 
+    public Gobblet(Gobblet gobblet) {
+        this.gobbletColor = gobblet.getGobbletColor();
+        this.gobbletSize = gobblet.getGobbletSize();
+        this.x = gobblet.getX();
+        this.y = gobblet.getY();
+    }
+
     public GobbletColor getGobbletColor() {
         return gobbletColor;
     }

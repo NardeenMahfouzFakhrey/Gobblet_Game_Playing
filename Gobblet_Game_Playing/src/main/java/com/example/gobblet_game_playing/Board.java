@@ -6,9 +6,12 @@ public class Board {
 
     /* 2d array of stack<Gobblet> */
     private Stack<Gobblet>[][] board;
+    private Stack<Gobblet>[][] playersGobblets;
 
     /* 4 stacks each has 4 gobblets*/
     public Board() {
+
+        GobbletColor[] gobbletColors = GobbletColor.values();
 
         board = new Stack[4][4];
         for(int i=0; i<4; i++){
@@ -16,7 +19,51 @@ public class Board {
                 board[i][j] = new Stack<>();
             }
         }
+
+        playersGobblets = new Stack[2][3];
+        for(int i = 0; i < 2; i++){
+            for(int j = 0; j < 3; j++) {
+                this.playersGobblets[i][j] = new Stack<>();
+                this.playersGobblets[i][j].push(new Gobblet(gobbletColors[i], GobbletSize.SIZE_1, -1, -1));
+                this.playersGobblets[i][j].push(new Gobblet(gobbletColors[i], GobbletSize.SIZE_2, -1, -1));
+                this.playersGobblets[i][j].push(new Gobblet(gobbletColors[i], GobbletSize.SIZE_3, -1, -1));
+                this.playersGobblets[i][j].push(new Gobblet(gobbletColors[i], GobbletSize.SIZE_4, -1, -1));
+            }
+        }
     }
+
+    public Board(Board board){
+
+        this.board = new Stack[4][4];
+        for(int i=0; i<4; i++){
+            for(int j=0; j<4; j++){
+                this.board[i][j] = new Stack<>();
+                for(int z=0; z<board.getBoard()[i][j].size(); z++){
+                    Gobblet gobblet = new Gobblet(board.getBoard()[i][j].elementAt(z));
+                    this.board[i][j].push(gobblet);
+                }
+//                this.board[i][j].addAll(board.getBoard()[i][j]);
+            }
+        }
+        this.playersGobblets =  new Stack[2][3];
+        this.playersGobblets[0] = new Stack[3];
+        this.playersGobblets[1] = new Stack[3];
+        for(int i=0; i<3; i++){
+            this.playersGobblets[0][i] = new Stack<>();
+            for(int j=0; j<board.getPlayersGobblets()[0][i].size();j++){
+                Gobblet gobblet = new Gobblet(board.getPlayersGobblets()[0][i].elementAt(j));
+                this.playersGobblets[0][i].push(gobblet);
+            }
+
+            this.playersGobblets[1][i] = new Stack<>();
+            for(int j=0; j<board.getPlayersGobblets()[1][i].size();j++){
+                Gobblet gobblet = new Gobblet(board.getPlayersGobblets()[1][i].elementAt(j));
+                this.playersGobblets[1][i].push(gobblet);
+            }
+
+        }
+    }
+
 
     /**
      * to check for any winner by completing a row, a column or a diagonal
@@ -84,7 +131,7 @@ public class Board {
      * @param move
      * @return void
      */
-    void playRound(GameMove move) {
+    void playRound(GameMove move, Game.Turn currentTurn) {
         // boolean onBoard = false;
         Gobblet gobblet = move.getGobblet();
         int x1 = gobblet.getX();
@@ -95,9 +142,15 @@ public class Board {
         /* If moving an existing gobblet, pop it from the original position */
         if (x1 != -1 && y1 != -1) {
             // onBoard = true;
+//            System.out.println(x1);
+//            System.out.println(y1);
+            if(getFront(x1,y1)==null){
+                System.out.println("null");
+            }
             gobblet = board[x1][y1].pop();
-            System.out.println(x1);
-            System.out.println(y1);
+
+        }else{
+            playersGobblets[currentTurn.ordinal()][move.getStackNo()].pop();
         }
 
         /* Place the gobblet at the new position */
@@ -132,13 +185,33 @@ public class Board {
         }
     }
 
+//    void printBoard(){
+//
+//        for(int i = 0; i < board.length; i++){
+//
+//            for(int j = 0; j < board.length; j++){
+//                if(!board[i][j].isEmpty())
+//                    System.out.print(board[i][j].peek().getGobbletSize().ordinal() + " ");
+//                else{
+//                    System.out.print("-1 ");
+//                }
+//            }
+//            System.out.println();
+//
+//        }
+//    }
+
     void printBoard(){
 
         for(int i = 0; i < board.length; i++){
 
             for(int j = 0; j < board.length; j++){
                 if(!board[i][j].isEmpty())
-                    System.out.print(board[i][j].peek().getGobbletSize().ordinal() + " ");
+                    if(board[i][j].peek().getGobbletColor().ordinal() == GobbletColor.WHITE.ordinal()){
+                        System.out.print("w" + board[i][j].peek().getGobbletSize().ordinal() + " ");
+                    }else {
+                        System.out.print("b" + board[i][j].peek().getGobbletSize().ordinal() + " ");
+                    }
                 else{
                     System.out.print("-1 ");
                 }
@@ -148,11 +221,12 @@ public class Board {
         }
     }
 
+
     public Stack<Gobblet>[][] getBoard() {
         return board;
     }
 
-    public void setBoard(Stack<Gobblet>[][] board) {
-        this.board = board;
+    public Stack<Gobblet>[][] getPlayersGobblets() {
+        return playersGobblets;
     }
 }

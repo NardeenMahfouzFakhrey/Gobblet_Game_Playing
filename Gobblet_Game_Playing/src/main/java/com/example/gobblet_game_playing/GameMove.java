@@ -13,6 +13,13 @@ public class GameMove {
         this.stackNo = stackNo;
     }
 
+    public GameMove(GameMove move) {
+        this.gobblet = new Gobblet(move.getGobblet());
+        this.x = move.getX();
+        this.y = move.getY();
+        this.stackNo = move.getStackNo();
+    }
+
     public Gobblet getGobblet() {
         return gobblet;
     }
