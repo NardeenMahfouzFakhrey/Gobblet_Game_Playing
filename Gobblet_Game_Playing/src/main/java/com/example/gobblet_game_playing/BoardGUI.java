@@ -28,6 +28,10 @@ public class BoardGUI {
     static int newX = -1;
     static int newY = -1;
     static int stack = -1;
+    static GobbletImage[][] gobbletTransparent = new GobbletImage[2][3];
+
+    static ImageView[][] transparentImage = new ImageView[2][3];
+
 
 
     public static void DrawBorad(Stage stage){
@@ -46,6 +50,7 @@ public class BoardGUI {
 
         DrawBlackGobblets();
         DrawWhiteGobblets();
+        setTransparent();
         hbox = new HBox(blackBox,pane,whiteBox);
 
 
@@ -63,6 +68,14 @@ public class BoardGUI {
         stage.show();
     }
 
+    public static void setTransparent(){
+        for (int i=0; i<2 ; i++){
+            for (int j=0; j<3 ; j++){
+                gobbletTransparent[i][j] =new GobbletImage("Transparent",0,true);
+                transparentImage[i][j] = BoardGUI.gobbletTransparent[i][j].getImgView();
+            }
+        }
+    }
     public static Pane placeButtons(){
 
         for (int i=0 ; i<4;i++) {

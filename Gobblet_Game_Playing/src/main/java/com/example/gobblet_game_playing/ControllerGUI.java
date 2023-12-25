@@ -44,8 +44,12 @@ public class ControllerGUI {
             gobblet.setOnDragDone(event -> {
                 if (j == 0){
                     if (color == "W") {
+                        int index = BoardGUI.whiteBox.getChildren().indexOf(BoardGUI.whiteImages[i][j]);
+                        BoardGUI.whiteBox.getChildren().set(index, BoardGUI.transparentImage[0][i]);
                         BoardGUI.whiteBox.getChildren().remove(BoardGUI.whiteImages[i][j]);
                     } else if (color == "B") {
+                        int index = BoardGUI.blackBox.getChildren().indexOf(BoardGUI.blackImages[i][j]);
+                        BoardGUI.blackBox.getChildren().set(index, BoardGUI.transparentImage[1][i]);
                         BoardGUI.blackBox.getChildren().remove(BoardGUI.blackImages[i][j]);
                     }
                 }else{
