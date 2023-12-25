@@ -2,7 +2,15 @@ package com.example.gobblet_game_playing;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -11,11 +19,18 @@ import java.util.Scanner;
 public class HelloApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
-        stage.setScene(scene);
-        stage.show();
+        BoardGUI.DrawBorad(stage);
+        ControllerGUI controllerGUI = new ControllerGUI();
+        for(int i=0 ; i<3 ; i++){
+            for(int j=0 ; j<4 ; j++){
+                controllerGUI.InitUi(BoardGUI.whiteImages[i][j],"W",i,j);
+            }
+        }
+        for(int i=0 ; i<3 ; i++){
+            for(int j=0 ; j<4 ; j++){
+                controllerGUI.InitUi(BoardGUI.blackImages[i][j],"B",i,j);
+            }
+        }
     }
 
 //    public static void main(String[] args) {
