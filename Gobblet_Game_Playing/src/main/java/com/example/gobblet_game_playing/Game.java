@@ -1,8 +1,5 @@
 package com.example.gobblet_game_playing;
 
-
-
-
 public class Game {
 
     private Board board;
@@ -13,6 +10,8 @@ public class Game {
     private Turn currentTurn;
     private GameMove currentGameMove;
     private Difficulty gameDifficulty;
+    private GobbletColor[] gobbletColors = GobbletColor.values();
+
 
     public enum Turn{
         A,
@@ -40,7 +39,7 @@ public class Game {
             p1 = new HumanPlayer(name1, GobbletColor.WHITE);
         }else if(t1 == PlayerType.COMPUTER){
             this.gameDifficulty = gameDifficulty;
-            p1 = new ComputerPlayer(name1, GobbletColor.WHITE, this.gameDifficulty);
+            p1 = new ComputerPlayer(name1, GobbletColor.WHITE, Difficulty.HARD);
         }
 
         Player p2 = null;
@@ -48,7 +47,7 @@ public class Game {
             p2 = new HumanPlayer(name2, GobbletColor.BLACK);
         }else if(t2 == PlayerType.COMPUTER){
             this.gameDifficulty = gameDifficulty;
-            p2 = new ComputerPlayer(name2, GobbletColor.BLACK, this.gameDifficulty);
+            p2 = new ComputerPlayer(name2, GobbletColor.BLACK, Difficulty.HARD);
         }
         if(p1 != null && p2 != null){
             players = new PlayerPair(p1, p2);
@@ -125,7 +124,15 @@ public class Game {
      * @return boolean
      */
     public boolean isGameEnded() {
-        return board.isWinningState();
+
+        if(currentTurn.ordinal() == 0){
+            winner = players.getPlayer2();
+
+        }else{
+            winner = players.getPlayer1();
+        }
+
+        return board.isWinningState(gobbletColors[(currentTurn.ordinal())]);
     }
 
 
@@ -149,8 +156,8 @@ public class Game {
     public boolean setCurrentGameMove(int x1, int y1, int x2, int y2, int stackNo) {
 
         Gobblet gobblet;
-        if(x1==-1 && y1==-1){
-            if(currentTurn.ordinal()==0){
+        if(x1 == -1 && y1 == -1){
+            if(currentTurn.ordinal() == 0){
                  gobblet = board.getPlayersGobblets()[0][stackNo].peek();
             }else{
                  gobblet = board.getPlayersGobblets()[1][stackNo].peek();
@@ -163,25 +170,25 @@ public class Game {
 
         GameMove move = new GameMove(gobblet, x2, y2, stackNo);
 
-        if(currentTurn.ordinal()==0){
+        if(currentTurn.ordinal() == 0){
             boolean flag = ((HumanPlayer) players.getPlayer1()).playGobbletMove(move, board);
-            if(isGameEnded()){
-                if(currentTurn.ordinal()==0){
-                    winner =  players.getPlayer1();
-                }else{
-                    winner =  players.getPlayer2();
-                }
-            }
+//            if(isGameEnded()){
+//                if(currentTurn.ordinal() == 0){
+//                    winner = players.getPlayer1();
+//                }else{
+//                    winner = players.getPlayer2();
+//                }
+//            }
             return flag;
         }else{
             boolean flag = ((HumanPlayer) players.getPlayer2()).playGobbletMove(move, board);
-            if(isGameEnded()){
-                if(currentTurn.ordinal()==0){
-                    winner =  players.getPlayer1();
-                }else{
-                    winner =  players.getPlayer2();
-                }
-            }
+//            if(isGameEnded()){
+//                if(currentTurn.ordinal()==0){
+//                    winner =  players.getPlayer1();
+//                }else{
+//                    winner =  players.getPlayer2();
+//                }
+//            }
             return flag;
         }
 
@@ -191,29 +198,30 @@ public class Game {
     public GameMove getComputerMove(){
         if(currentTurn.ordinal()==0){
             GameMove move = ((ComputerPlayer) players.getPlayer1()).playGobbletMove(this.board);
-            if(isGameEnded()){
-                if(currentTurn.ordinal()==0){
-                    winner =  players.getPlayer1();
-                }else{
-                    winner =  players.getPlayer2();
-                }
-            }
+            System.out.println("Computer Move: ");
+            System.out.println("Gobblet: " + move.getGobblet().getGobbletSize().ordinal() + " (" + move.getGobblet().getX() + "," + move.getGobblet().getY() + ") -> (" + move.getX() + "," + move.getY() + ")");
             board.playRound(move, currentTurn);
+//            if(isGameEnded()){
+//                System.out.println("Game Ended 1");
+//
+//            }
             return move;
         }else{
             GameMove move = ((ComputerPlayer) players.getPlayer2()).playGobbletMove(this.board);
-            if(isGameEnded()){
-                if(currentTurn.ordinal()==0){
-                    winner =  players.getPlayer1();
-                }else{
-                    winner =  players.getPlayer2();
-                }
-            }
-            System.out.println(move.getGobblet().getX());
-            System.out.println(move.getGobblet().getY());
-            System.out.println(move.getX());
-            System.out.println(move.getY());
+            System.out.println("Computer Move: ");
+            System.out.println("Gobblet: " + move.getGobblet().getGobbletSize().ordinal() + " (" + move.getGobblet().getX() + "," + move.getGobblet().getY() + ") -> (" + move.getX() + "," + move.getY() + ")");
             board.playRound(move, currentTurn);
+
+//            if(isGameEnded()){
+//
+//                System.out.println("Game Ended 2");
+//
+//                if(currentTurn.ordinal()==0){
+//                    winner = players.getPlayer1();
+//                }else{
+//                    winner = players.getPlayer2();
+//                }
+//            }
             return move;
         }
     }

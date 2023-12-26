@@ -137,7 +137,8 @@ public abstract class Player {
         }
 
         if (move.getGobblet().getX() == -1 && move.getGobblet().getY() == -1) {
-            if(board.getPlayersGobblets()[myTurn.ordinal()][move.getStackNo()].peek() != null && board.getPlayersGobblets()[myTurn.ordinal()][move.getStackNo()].peek().getGobbletSize() == move.getGobblet().getGobbletSize()){
+
+            if(!board.getPlayersGobblets()[myTurn.ordinal()][move.getStackNo()].isEmpty() && board.getPlayersGobblets()[myTurn.ordinal()][move.getStackNo()].peek().getGobbletSize() == move.getGobblet().getGobbletSize()){
                 isOffBoard = true;
             }else{
                 return false;

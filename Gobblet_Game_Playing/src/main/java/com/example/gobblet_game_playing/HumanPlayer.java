@@ -15,9 +15,6 @@ public class HumanPlayer extends Player {
     public boolean playGobbletMove(GameMove move, Board board) {
 
         if(isValidMove(move, board, myTurn)){
-//            if(move.getGobblet().getX() == -1 && move.getGobblet().getY() == -1){
-//                gobblets[move.getStackNo()].pop();
-//            }
             board.playRound(move, myTurn);
             return true;
         }

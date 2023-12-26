@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 
 public class HelloApplication extends Application {
     @Override
@@ -37,11 +38,11 @@ public class HelloApplication extends Application {
 //        launch();
 //    }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
 
         Scanner sc = new Scanner(System.in);
 
-        Game.PlayerType type1 = Game.PlayerType.HUMAN;
+        Game.PlayerType type1 = Game.PlayerType.COMPUTER;
         Game.PlayerType type2 = Game.PlayerType.COMPUTER;
 
         Game.PlayerType players[] = new Game.PlayerType[2];
@@ -52,7 +53,7 @@ public class HelloApplication extends Application {
         Game game = new Game(type1, "karine", type2, "Tantawy", Game.Difficulty.HARD);
         System.out.println("Start Game");
 
-        while (true) {
+        while (!game.isGameEnded()) {
 
 
             if (players[game.getCurrentTurn().ordinal()].ordinal() == Game.PlayerType.HUMAN.ordinal()) {
@@ -83,13 +84,50 @@ public class HelloApplication extends Application {
             } else {
                 GameMove move = game.getComputerMove();
                 game.switchTurn();
-                System.out.println("Computer Move: ");
-                System.out.println("Gobblet: " + move.getGobblet().getGobbletSize().ordinal() + " (" + move.getGobblet().getX() + "," + move.getGobblet().getY() + ") -> (" + move.getX() + "," + move.getY() + ")");
+//                System.out.println("Computer Move: ");
+//                System.out.println("Gobblet: " + move.getGobblet().getGobbletSize().ordinal() + " (" + move.getGobblet().getX() + "," + move.getGobblet().getY() + ") -> (" + move.getX() + "," + move.getY() + ")");
                 game.getBoard().printBoard();
+                TimeUnit.SECONDS.sleep(1);
             }
         }
+
+        System.out.println("Winner is " + game.getWinner().getName());
+
     }
 }
+
+
+//    public static void main(String[] args) {
+//
+//        Scanner sc = new Scanner(System.in);
+//
+//        Game.PlayerType type1 = Game.PlayerType.COMPUTER;
+//        Game.PlayerType type2 = Game.PlayerType.COMPUTER;
+//
+//        Game.PlayerType players[] = new Game.PlayerType[2];
+//        players[0] = type1;
+//        players[1] = type2;
+//        //Game.Turn turn = Game.Turn.A;
+//
+//        Game game = new Game(type1, "karine", type2, "Tantawy", Game.Difficulty.HARD);
+//        System.out.println("Start Game");
+//
+//        while (!game.isGameEnded()) {
+//
+//            GameMove move = game.getComputerMove();
+//                game.switchTurn();
+//
+//            if (players[game.getCurrentTurn().ordinal()].ordinal() == Game.PlayerType.HUMAN.ordinal()) {
+//
+//                game.getBoard().printBoard();
+//            } else {
+//
+//            }
+//        }
+//    }
+
+
+//}
 //    public static void main(String[] args) {
 //
 //
