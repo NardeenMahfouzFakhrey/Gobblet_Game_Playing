@@ -132,7 +132,7 @@ public class Game {
             winner = players.getPlayer1();
         }
 
-        return board.isWinningState(gobbletColors[(currentTurn.ordinal())]);
+        return (board.isWinningState(gobbletColors[(currentTurn.ordinal())]) != null) ? true : false;
     }
 
 

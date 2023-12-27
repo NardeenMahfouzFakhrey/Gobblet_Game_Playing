@@ -124,7 +124,7 @@ public class ComputerPlayer extends Player{
 
     public int alphaBeta(Board board, Game.Turn turn, int alpha, int beta, int depth, boolean isMaximizingPlayer){
 
-        if (depth == 0  || board.isWinningState(gobbletColors[(turn.ordinal()+1)%2]) || board.isWinningState(gobbletColors[(turn.ordinal())])) {
+        if (depth == 0  || board.isWinningState(gobbletColors[(turn.ordinal()+1)%2]) != null || board.isWinningState(gobbletColors[(turn.ordinal())]) != null) {
             counter++;
             int rating = evaluation(board, gobbletColors[(turn.ordinal()+1)%2], depth);
             return rating;

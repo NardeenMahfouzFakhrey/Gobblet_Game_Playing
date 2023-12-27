@@ -38,24 +38,24 @@ public class HelloApplication extends Application {
 //        launch();
 //    }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
+        //launch();
 
         Scanner sc = new Scanner(System.in);
 
-        Game.PlayerType type1 = Game.PlayerType.COMPUTER;
-        Game.PlayerType type2 = Game.PlayerType.COMPUTER;
+        Game.PlayerType type1 = Game.PlayerType.HUMAN;
+        Game.PlayerType type2 = Game.PlayerType.HUMAN;
 
         Game.PlayerType players[] = new Game.PlayerType[2];
         players[0] = type1;
         players[1] = type2;
         //Game.Turn turn = Game.Turn.A;
 
-        Game game = new Game(type1, "karine", type2, "Tantawy", Game.Difficulty.HARD);
+        Game game = new Game(type1, "karine", type2, "Tantawy", null);
+
         System.out.println("Start Game");
 
-        while (!game.isGameEnded()) {
-
-
+        while (game.getBoard().isWinningState(GobbletColor.BLACK)!=GobbletColor.BLACK && game.getBoard().isWinningState(GobbletColor.WHITE)!=GobbletColor.WHITE) {
             if (players[game.getCurrentTurn().ordinal()].ordinal() == Game.PlayerType.HUMAN.ordinal()) {
                 System.out.println("Enter you next Move: ");
 
@@ -82,19 +82,13 @@ public class HelloApplication extends Application {
                 }
                 game.getBoard().printBoard();
             } else {
-                GameMove move = game.getComputerMove();
-                game.switchTurn();
-//                System.out.println("Computer Move: ");
-//                System.out.println("Gobblet: " + move.getGobblet().getGobbletSize().ordinal() + " (" + move.getGobblet().getX() + "," + move.getGobblet().getY() + ") -> (" + move.getX() + "," + move.getY() + ")");
-                game.getBoard().printBoard();
-                TimeUnit.SECONDS.sleep(1);
+
             }
         }
-
-        System.out.println("Winner is " + game.getWinner().getName());
-
     }
 }
+
+//        System.out.println("Winner is " + game.getWinner().name);
 
 
 //    public static void main(String[] args) {
