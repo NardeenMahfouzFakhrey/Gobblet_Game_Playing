@@ -1,9 +1,13 @@
 package com.example.gobblet_game_playing;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -13,6 +17,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class BoardGUI {
     static Button[][] button = new Button[4][4];
@@ -28,6 +33,10 @@ public class BoardGUI {
     static int newX = -1;
     static int newY = -1;
     static int stack = -1;
+    static boolean moveState = false;
+    static Game game;
+
+    static boolean isMove = false;
     static GobbletImage[][] gobbletTransparent = new GobbletImage[2][3];
 
     static ImageView[][] transparentImage = new ImageView[2][3];
@@ -100,34 +109,53 @@ public class BoardGUI {
                 buttonPanes[i][j].getChildren().add(button[i][j]);
 
                 buttonPanes[i][j].setOnDragOver(event -> {
-                    if (event.getGestureSource() != buttonPanes[finalI][finalJ] && event.getDragboard().hasImage()) {
-                        event.acceptTransferModes(TransferMode.COPY);
-                    }
-                    event.consume();
+                        if (event.getGestureSource() != buttonPanes[finalI][finalJ] && event.getDragboard().hasImage()) {
+                            event.acceptTransferModes(TransferMode.COPY);
+                        }
+                        event.consume();
                 });
 
                 buttonPanes[i][j].setOnDragDropped(event -> {
+
                     Dragboard dragboard = event.getDragboard();
                     boolean success = false;
+                    newX = finalI;
+                    newY = finalJ;
+                    if(game.setCurrentGameMove(BoardGUI.oldX, BoardGUI.oldY,BoardGUI.newX,BoardGUI.newY,BoardGUI.stack)) {
+                            if (dragboard.hasImage()) {
+                                buttonPanes[finalI][finalJ].getChildren().remove(imageView);
+                                imageView.setImage(dragboard.getImage());
+                                buttonPanes[finalI][finalJ].getChildren().add(imageView);
+                                System.out.println("Photo dropped on the button! " + "i = " + finalI + " j = " + finalJ);
+                                success = true;
+                                moveState =true;
+                                if ((oldX == newX) && (oldY == newY)) {
 
-                    if (dragboard.hasImage()) {
-                        buttonPanes[finalI][finalJ].getChildren().remove(imageView);
-                        imageView.setImage(dragboard.getImage());
-                        buttonPanes[finalI][finalJ].getChildren().add(imageView);
-                        System.out.println("Photo dropped on the button! " + "i = " + finalI + " j = " + finalJ);
-                        success = true;
-                        newX = finalI;
-                        newY = finalJ;
-                        if ((oldX == newX) && (oldY == newY) ){
+                                } else {
+                                    Game.testGUI(oldX, oldY, newX, newY, stack);
+                                    if (game.isGameEnded()) {
+                                        displayWinnerMessage(game.getWinner());
+                                    }
+                                    stack = -1;
+                                    moveState = false;
+                                }
+                            }
+                            moveState = true;
+                            event.setDropCompleted(success);
+                            game.switchTurn();
+                            Game.Turn currentTurn = game.getCurrentTurn();
+                            event.consume();
 
-                        }else {
-                            Game.testGUI(oldX,oldY, newX, newY,stack);
-                            stack = -1;
-                        }
-                        }
+                    }
+                    else {
+                        moveState = false;
+                        Alert alert = new Alert(Alert.AlertType.WARNING);
+                        alert.setTitle("Warning!");
+                        alert.setHeaderText("Incorrect Move");
+                        alert.setContentText("Incorrect Move");
+                        alert.showAndWait();
+                    }
 
-                    event.setDropCompleted(success);
-                    event.consume();
                 });
 
                 imageView.setOnDragDetected(event -> {
@@ -214,5 +242,20 @@ public class BoardGUI {
             vbox.getChildren().set(index, imageView1);
         }
 
+    }
+    private static void displayWinnerMessage(Player winner) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Game Over!");
+        alert.setHeaderText("Congratulations, " + winner.getName() + "!");
+        alert.setContentText("You are the winner!");
+
+        // Add an image to the alert
+        Image winnerImage = new Image(BoardGUI.class.getResource("winner.png").toExternalForm());
+        ImageView imageView = new ImageView(winnerImage);
+        imageView.setFitWidth(50);
+        imageView.setFitHeight(50);
+        alert.setGraphic(imageView);
+
+        alert.showAndWait();
     }
 }
