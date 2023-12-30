@@ -397,18 +397,25 @@ public class ComputerPlayer extends Player {
         return opponentScore - myScore;
     }
 
-
+    /**
+     * implement iterative deepening algorithm
+     * @param board
+     * @param turn
+     * @param maxDepth
+     * @return
+     */
     public GameMove iterativeDeepening(Board board, Game.Turn turn, int maxDepth) {
-
         for (int depth = 1; depth <= maxDepth; depth++) {
             alphaBeta(board, turn, Integer.MIN_VALUE, Integer.MAX_VALUE, depth, true);
-            if (/*game.isTurnTimeLimitExceeded() ||*/ board.isWinningState(GobbletColor.WHITE) != null || board.isWinningState(GobbletColor.WHITE) != null) {
+            if (Game.isTurnTimeLimitExceeded() || board.isWinningState(gobbletColors[turn.ordinal()]) == gobbletColors[turn.ordinal()]) {
                 return this.bestMove;
             }
-            //System.out.println("Depth " + depth);
+            // System.out.println("Depth in ITS: " + depth);
         }
         return this.bestMove;
     }
+
+
 
 }
 

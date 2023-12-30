@@ -5,8 +5,10 @@ public class Game {
     private Board board;
     private Player winner;
     private PlayerPair players;
-    private long turnStartTime;
-    private long turnTimeLimitMillis;
+
+    static long turnStartTime =0 ;
+    static long turnTimeLimitMillis = 30000;
+
     private Turn currentTurn;
     private GobbletColor[] gobbletColors = GobbletColor.values();
 
@@ -131,7 +133,7 @@ public class Game {
      * Check if the current turn has exceeded the time limit
      * @return boolean
      */
-    public boolean isTurnTimeLimitExceeded() {
+    public static boolean isTurnTimeLimitExceeded() {
         long currentTime = System.currentTimeMillis();
         return (currentTime - turnStartTime) > turnTimeLimitMillis;
     }
