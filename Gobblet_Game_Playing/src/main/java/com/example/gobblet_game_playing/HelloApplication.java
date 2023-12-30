@@ -42,7 +42,6 @@ public class HelloApplication extends Application {
 //    }
 
     public static void main(String[] args) {
-        //launch();
 
         Scanner sc = new Scanner(System.in);
 
@@ -53,7 +52,7 @@ public class HelloApplication extends Application {
         players[0] = type1;
         players[1] = type2;
 
-        Game game = new Game(type1, "karine", Game.Difficulty.HARD, type2, "Tantawy", Game.Difficulty.EASY);
+        Game game = new Game(type1, "karine", Game.Difficulty.HARD, type2, "Tantawy", Game.Difficulty.NORMAL);
 
         System.out.println("Start Game");
 
@@ -89,7 +88,6 @@ public class HelloApplication extends Application {
                 System.out.println("Gobblet: " + move.getGobblet().getGobbletSize().ordinal() + " (" + move.getGobblet().getX() + "," + move.getGobblet().getY() + ") -> (" + move.getX() + "," + move.getY() + ")");
                 game.switchTurn();
                 game.getBoard().printBoard();
-                //TimeUnit.SECONDS.sleep(1);
             }
         }
         System.out.println("Winner is " + game.getWinner().name);

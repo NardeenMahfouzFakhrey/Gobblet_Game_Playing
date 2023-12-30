@@ -1,9 +1,7 @@
 package com.example.gobblet_game_playing;
-
 import com.example.gobblet_game_playing.Game.Difficulty;
 
 import java.util.ArrayList;
-import java.util.Stack;
 
 public class ComputerPlayer extends Player {
 
@@ -12,7 +10,7 @@ public class ComputerPlayer extends Player {
     private Game.Turn[] turns = Game.Turn.values();
     private GameMove bestMove;
     private int searchDepth;
-    public int counter = 0;
+    public int pruneCounter = 0;
 
     public ComputerPlayer(String name, GobbletColor gobbletColor, Difficulty difficulty) {
         super(name, gobbletColor);
@@ -50,11 +48,10 @@ public class ComputerPlayer extends Player {
 
     }
 
-    ArrayList<GameMove> generatePossibleMoves(Board board, Game.Turn turn) {
+    ArrayList<GameMove> generatePossibleMoves(Board myBoard, Game.Turn turn) {
 
         ArrayList<GameMove> possibleMoves = new ArrayList<>();
         ArrayList<Boolean> flags = new ArrayList<>(4);
-        Board myBoard = new Board(board);
 
         /* Initialize the flags ArrayList */
         for (int i = 0; i < 4; i++) {
@@ -79,7 +76,7 @@ public class ComputerPlayer extends Player {
 
                     if (this.isValidMove(possibleMove, myBoard, turn)) {
 
-                        possibleMoves.add(new GameMove(possibleMove));
+                        possibleMoves.add(possibleMove);
 
                     }
                 }
@@ -107,7 +104,7 @@ public class ComputerPlayer extends Player {
 
                         if (this.isValidMove(possibleMove, myBoard, turn)) {
 
-                            possibleMoves.add(new GameMove(possibleMove));
+                            possibleMoves.add(possibleMove);
 
                         }
                     }
@@ -120,35 +117,18 @@ public class ComputerPlayer extends Player {
 
     public int alphaBeta(Board board, Game.Turn turn, int alpha, int beta, int depth, boolean isMaximizingPlayer) {
 
-        if (depth == 0) {
-            counter++;
-//            board.printBoard();
-//            System.out.println("Evaluation: " + this.evaluation(board, playerColor, depth));
-            int rating = evaluation(board, playerColor, depth);
+        GobbletColor winnerColor = board.isWinningState(playerColor);
+
+        if (depth == 0 || winnerColor != null) {
+            return evaluation(board, playerColor, depth) + depth;
+        }
+
+        int rating = evaluation(board, playerColor, depth) + depth;
+
+        if(difficulty == Difficulty.HARD && depth != searchDepth && board.isCriticalState()) {
             return rating;
         }
 
-
-        if (board.isWinningState(GobbletColor.BLACK) != null || board.isWinningState(GobbletColor.WHITE) != null) {
-//            board.printBoard();
-//            System.out.println("Evaluation: " + this.evaluation(board, playerColor, depth));
-            int rating = evaluation(board, playerColor, depth);
-            return rating;
-        }
-
-//        if(depth != searchDepth && (evaluation(board, playerColor, depth) == (Integer.MIN_VALUE / (searchDepth-depth)))){
-////            if(depth == 1) {
-////                System.out.println("**********************");
-////                board.printBoard();
-////                System.out.println();
-////                System.out.println(depth);
-////                System.out.println("**********************");
-////            }
-////            System.out.println("here");
-////            System.out.println(evaluation(board, gobbletColors[(turn.ordinal()+1)%2], depth));
-////            System.out.println((Integer.MIN_VALUE / (searchDepth-depth)));
-//            return (Integer.MIN_VALUE / (searchDepth-depth));
-//        }
 
         ArrayList<GameMove> possibleMoves = generatePossibleMoves(board, turn);
 
@@ -167,8 +147,9 @@ public class ComputerPlayer extends Player {
                     val = alphaBeta(boardState, Game.Turn.A, alpha, beta, depth - 1, !isMaximizingPlayer);
                 }
 
-                if (bestMove == null)
+                if (bestMove == null){
                     bestMove = possibleMoves.get(0);
+                }
                 if (val > maxVal) {
                     if (depth == searchDepth) {
                         bestMove = possibleMoves.get(i);
@@ -178,6 +159,7 @@ public class ComputerPlayer extends Player {
 
                 alpha = Math.max(alpha, val);
                 if (beta <= alpha) {
+                    pruneCounter++;
                     break;
                 }
                 i++;
@@ -200,6 +182,7 @@ public class ComputerPlayer extends Player {
                 beta = Math.min(beta, val);
 
                 if (beta <= alpha) {
+                    pruneCounter++;
                     break;
                 }
             }
@@ -210,200 +193,132 @@ public class ComputerPlayer extends Player {
 
 
     /*
-     * 1. How many of my gobblet in a line
-     * 2. How many of opponents gobblets in that same line
-     * 3. sizes
-     * 4. winning state     inf
-     * 5. loosing state    -inf
+     * Number of my played Gobblets in rows, columns and diagonals compared to my opponent
+     * Size of my played Gobblets in rows, columns and diagonals compared to my opponent
+     * States where my opponent has one play to win in hard difficulty mode (Critical Position Heuristic)
+     * Winning state increases my score with +10000 * (depth + 1)
+     * Losing state decreses my score with -10000 * (depth + 1)
      */
     public int evaluation(Board board, GobbletColor myColor, int depth) {
 
         int myScore = 0;
-        int opponentScore = 0;
-        boolean winFlag = false;
-        boolean loseFlag1 = false;
-        boolean loseFlag2 = false;
-        boolean loseFlag3 = false;
+        int sizeScore = 0;
+        boolean criticalPosition = false;
+
 
         for (int i = 0; i < 4; i++) {
-            int myNewScore = 4;
-            int opponentNewScore = 4;
+            int opponentNewScore = 0;
             boolean isBig = false;
             for (int j = 0; j < 4; j++) {
                 Gobblet gobblet = board.getFront(i, j);
                 if (gobblet != null) {
                     if (gobblet.getGobbletColor() == myColor) {
-                        myNewScore--;
+                        myScore++;
                         isBig = gobblet.getGobbletSize() == GobbletSize.SIZE_4;
+                        sizeScore += gobblet.getGobbletSize().ordinal() * 5;
+
                     } else {
-                        opponentNewScore--;
+                        opponentNewScore++;
+                        myScore--;
+                        sizeScore -= gobblet.getGobbletSize().ordinal() * 5;
+
                     }
                 }
+
             }
 
-//            if(myNewScore == 0)
-//                return (int) (Integer.MAX_VALUE * 0.1 * (depth + 1));
-//
-//
-//            if(opponentNewScore == 1 && myNewScore == 4)
-//                return (int) (Integer.MIN_VALUE * 0.1 * (depth + 1));
-
-
-            if (myNewScore == 0)
-                winFlag = true;
-
-            if (opponentNewScore == 0)
-                loseFlag1 = true;
-
-            if (opponentNewScore == 1 && myNewScore == 4)
-                loseFlag2 = true;
-
-            if (opponentNewScore == 1 && myNewScore == 3 && !isBig)
-                loseFlag3 = true;
-
-            myScore += myNewScore;
-            opponentScore += opponentNewScore;
-
+            if(opponentNewScore == 3 && !isBig)
+                criticalPosition = true;
         }
 
 
         for (int j = 0; j < 4; j++) {
-            int myNewScore = 4;
-            int opponentNewScore = 4;
+            int opponentNewScore = 0;
             boolean isBig = false;
             for (int i = 0; i < 4; i++) {
                 Gobblet gobblet = board.getFront(i, j);
                 if (gobblet != null) {
                     if (gobblet.getGobbletColor() == myColor) {
-                        myNewScore--;
+                        myScore++;
                         isBig = gobblet.getGobbletSize() == GobbletSize.SIZE_4;
+                        sizeScore += gobblet.getGobbletSize().ordinal() * 5;
+
                     } else {
-                        opponentNewScore--;
+                        opponentNewScore++;
+                        myScore--;
+                        sizeScore -= gobblet.getGobbletSize().ordinal() * 5;
+
                     }
                 }
             }
-
-
-//            if(myNewScore == 0)
-//                return (int) (Integer.MAX_VALUE * 0.1 * (depth + 1));
-//
-//
-//            if(opponentNewScore == 1 && myNewScore == 4)
-//                return (int) (Integer.MIN_VALUE * 0.1 * (depth + 1));
-
-
-            if (myNewScore == 0)
-                winFlag = true;
-
-            if (opponentNewScore == 0)
-                loseFlag1 = true;
-
-            if (opponentNewScore == 1 && myNewScore == 4)
-                loseFlag2 = true;
-
-            if (opponentNewScore == 1 && myNewScore == 3 && !isBig)
-                loseFlag3 = true;
-
-
-            myScore += myNewScore;
-            opponentScore += opponentNewScore;
+            if(opponentNewScore == 3 && !isBig)
+                criticalPosition = true;
         }
 
 
-        int myNewScore = 4;
-        int opponentNewScore = 4;
+        int opponentNewScore = 0;
         boolean isBig = false;
+
         for (int i = 0; i < 4; i++) {
             Gobblet gobblet = board.getFront(i, i);
             if (gobblet != null) {
                 if (gobblet.getGobbletColor() == myColor) {
-                    myNewScore--;
+                    myScore++;
                     isBig = gobblet.getGobbletSize() == GobbletSize.SIZE_4;
+                    sizeScore += gobblet.getGobbletSize().ordinal() * 5;
+
                 } else {
-                    opponentNewScore--;
+                    opponentNewScore++;
+                    myScore--;
+                    sizeScore -= gobblet.getGobbletSize().ordinal() * 5;
+
                 }
             }
         }
-
-//        if(myNewScore == 0)
-//            return (int) (Integer.MAX_VALUE * 0.1 * (depth + 1));
-//
-//        if(opponentNewScore == 1 && myNewScore == 4)
-//            return (int) (Integer.MIN_VALUE * 0.1 * (depth + 1));
+        if(opponentNewScore == 3 && !isBig)
+            criticalPosition = true;
 
 
-        if (myNewScore == 0)
-            winFlag = true;
-
-        if (opponentNewScore == 0)
-            loseFlag1 = true;
-
-        if (opponentNewScore == 1 && myNewScore == 4)
-            loseFlag2 = true;
-
-        if (opponentNewScore == 1 && myNewScore == 3 && !isBig)
-            loseFlag3 = true;
-
-        myScore += myNewScore;
-        opponentScore += opponentNewScore;
-
-        myNewScore = 4;
-        opponentNewScore = 4;
+        opponentNewScore = 0;
         isBig = false;
+
         for (int i = 0; i < 4; i++) {
             Gobblet gobblet = board.getFront(i, 3 - i);
             if (gobblet != null) {
                 if (gobblet.getGobbletColor() == myColor) {
-                    myNewScore--;
+                    myScore++;
                     isBig = gobblet.getGobbletSize() == GobbletSize.SIZE_4;
+                    sizeScore += gobblet.getGobbletSize().ordinal() * 5;
+
                 } else {
-                    opponentNewScore--;
+                    opponentNewScore++;
+                    myScore--;
+                    sizeScore -= gobblet.getGobbletSize().ordinal() * 5;
+
                 }
             }
         }
+        if(opponentNewScore == 3 && !isBig)
+            criticalPosition = true;
 
-        if (myNewScore == 0)
-            winFlag = true;
-
-        if (opponentNewScore == 0)
-            loseFlag1 = true;
-
-        if (opponentNewScore == 1 && myNewScore == 4)
-            loseFlag2 = true;
-
-        if (opponentNewScore == 1 && myNewScore == 3 && !isBig)
-            loseFlag3 = true;
+        GobbletColor winner = board.isWinningState(playerColor);
 
 
-//        if(loseFlag1)
-//            return (int) (Integer.MIN_VALUE / (searchDepth-depth));
-//        if(winFlag)
-//            return (int) (Integer.MAX_VALUE * 0.1 * (depth + 1));
-//        if(loseFlag2 || loseFlag3)
-//            return (int) (Integer.MIN_VALUE / (searchDepth-depth));
 
+        if(winner != null && winner == playerColor){
+            myScore += (10000 * (depth + 1));
+        }else if (winner != null){
+            myScore -= (10000 * (depth + 1));
+        }else if (difficulty == Difficulty.HARD && criticalPosition){
+            myScore -= (10000 * (depth + 1));
+        }
 
-        if (loseFlag1)
-            return (int) (Integer.MIN_VALUE / (searchDepth - depth));
-        if (winFlag)
-            return (int) (Integer.MAX_VALUE * 0.1 * (depth + 1));
-        if (difficulty != Difficulty.EASY && (loseFlag2 || loseFlag3))
-            return (int) (Integer.MIN_VALUE / (searchDepth - depth));
+        board.setCriticalState(criticalPosition);
 
-
-        myScore += myNewScore;
-        opponentScore += opponentNewScore;
-
-        return opponentScore - myScore;
+        return myScore + sizeScore;
     }
 
-    /**
-     * implement iterative deepening algorithm
-     * @param board
-     * @param turn
-     * @param maxDepth
-     * @return
-     */
+
     public GameMove iterativeDeepening(Board board, Game.Turn turn, int maxDepth) {
         for (int depth = 1; depth <= maxDepth; depth++) {
             alphaBeta(board, turn, Integer.MIN_VALUE, Integer.MAX_VALUE, depth, true);
@@ -416,9 +331,7 @@ public class ComputerPlayer extends Player {
     }
 
 
-
 }
-
 
 
 
