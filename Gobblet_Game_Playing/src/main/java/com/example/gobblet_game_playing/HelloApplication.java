@@ -22,16 +22,12 @@ public class HelloApplication extends Application {
     private static Stage primaryStage;
 
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(Stage stage) {
         primaryStage = stage;
         resetGame();
     }
 
     public static void resetGame() {
-
-
-        //Game game = new Game(Game.PlayerType.HUMAN, "Ahmed", null, Game.PlayerType.HUMAN, "Ali", null);
-
 
         Game.PlayerType type1 = Game.PlayerType.COMPUTER;
         Game.PlayerType type2 = Game.PlayerType.COMPUTER;
@@ -40,11 +36,7 @@ public class HelloApplication extends Application {
         players[0] = type1;
         players[1] = type2;
 
-       Game game = new Game(type1, "karine", Game.Difficulty.EASY, type2, "Tantawy", Game.Difficulty.HARD);
-
-//        Game.PlayerType player1 = Game.PlayerType.COMPUTER;
-//        Game.PlayerType player2 = Game.PlayerType.HUMAN;
-
+       Game game = new Game(type1, "karine", Game.Difficulty.HARD, type2, "Tantawy", Game.Difficulty.NORMAL);
 
         BoardGUI.game = game;
         BoardGUI.type1=type1;
@@ -53,7 +45,7 @@ public class HelloApplication extends Application {
         ControllerGUI controllerGUI = new ControllerGUI(game);
         BoardGUI.DrawBorad(primaryStage);
 
-        if(type1!= Game.PlayerType.COMPUTER) {
+        if(type1 != Game.PlayerType.COMPUTER) {
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 4; j++) {
                     controllerGUI.InitUi(BoardGUI.blackImages[i][j], "B", i, j);
@@ -61,18 +53,23 @@ public class HelloApplication extends Application {
             }
         }
 
-        if(type2!= Game.PlayerType.COMPUTER) {
+        if(type2 != Game.PlayerType.COMPUTER) {
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 4; j++) {
                     controllerGUI.InitUi(BoardGUI.whiteImages[i][j], "W", i, j);
                 }
             }
         }
+
+        if(type2== Game.PlayerType.COMPUTER && type1== Game.PlayerType.COMPUTER) {
+            BoardGUI.computerVsComputer();
+        }
     }
 
     public static void main(String[] args) {
         launch();
     } }
+
 //
 //    public static void main(String[] args) {
 //
