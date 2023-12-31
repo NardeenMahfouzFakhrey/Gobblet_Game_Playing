@@ -111,7 +111,7 @@ public class BoardGUI {
                 int finalI = i;
                 int finalJ = j;
 
-                ImageView imageView = new ImageView();
+
                 buttonPanes[i][j].getChildren().add(button[i][j]);
 
                 if (type1 == Game.PlayerType.HUMAN || type2 == Game.PlayerType.HUMAN) {
@@ -132,9 +132,31 @@ public class BoardGUI {
                         newY = finalJ;
                         if (game.setCurrentGameMove(BoardGUI.oldX, BoardGUI.oldY, BoardGUI.newX, BoardGUI.newY, BoardGUI.stack)) {
                             if (dragboard.hasImage()) {
-                                buttonPanes[finalI][finalJ].getChildren().remove(imageView);
+//                                buttonPanes[finalI][finalJ].getChildren().remove(imageView);
+                                ImageView imageView = new ImageView();
                                 imageView.setImage(dragboard.getImage());
                                 buttonPanes[finalI][finalJ].getChildren().add(imageView);
+                                ClipboardContent content = new ClipboardContent();
+                                imageView.setOnDragDetected(Detectedevent -> {
+                                    System.out.println("Image Drag Detected");
+                                    Dragboard dragboard2 = imageView.startDragAndDrop(TransferMode.COPY);
+                                    content.putImage(imageView.getImage());
+                                    dragboard2.setContent(content);
+                                    imageView.setImage(null);
+                                    Detectedevent.consume();
+                                    oldX = finalI;
+                                    oldY = finalJ;
+                                    stack = -1;
+                                });
+
+                                // Add DRAG_DONE event handler
+                                imageView.setOnDragDone(doneEvent -> {
+                                    System.out.println("Image Drag Done");
+                                    if (moveState == false) {
+                                        imageView.setImage(content.getImage());
+                                    }
+                                });
+
                                 System.out.println("Photo dropped on the button! " + "i = " + finalI + " j = " + finalJ);
                                 success = true;
                                 if ((oldX == newX) && (oldY == newY)) {
@@ -188,26 +210,7 @@ public class BoardGUI {
 
                     });
 
-                    ClipboardContent content = new ClipboardContent();
-                    imageView.setOnDragDetected(event -> {
-                        System.out.println("Image Drag Detected");
-                        Dragboard dragboard = imageView.startDragAndDrop(TransferMode.COPY);
-                        content.putImage(imageView.getImage());
-                        dragboard.setContent(content);
-                        imageView.setImage(null);
-                        event.consume();
-                        oldX = finalI;
-                        oldY = finalJ;
-                        stack = -1;
-                    });
 
-                    // Add DRAG_DONE event handler
-                    imageView.setOnDragDone(doneEvent -> {
-                        System.out.println("Image Drag Done");
-                        if (moveState == false) {
-                            imageView.setImage(content.getImage());
-                        }
-                    });
                 }
             }
         }

@@ -30,13 +30,13 @@ public class HelloApplication extends Application {
     public static void resetGame() {
 
         Game.PlayerType type1 = Game.PlayerType.HUMAN;
-        Game.PlayerType type2 = Game.PlayerType.COMPUTER;
+        Game.PlayerType type2 = Game.PlayerType.HUMAN;
 
         Game.PlayerType players[] = new Game.PlayerType[2];
         players[0] = type1;
         players[1] = type2;
 
-       Game game = new Game(type1, "karine", null, type2, "Tantawy", Game.Difficulty.NORMAL);
+       Game game = new Game(type1, "karine", null, type2, "Tantawy", null);
 
         BoardGUI.game = game;
         BoardGUI.type1=type1;
