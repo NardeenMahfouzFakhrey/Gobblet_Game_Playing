@@ -28,27 +28,52 @@ public class HelloApplication extends Application {
     }
 
     public static void resetGame() {
-        Game game = new Game(Game.PlayerType.HUMAN, "Ahmed", null, Game.PlayerType.HUMAN, "Ali", null);
+
+
+        //Game game = new Game(Game.PlayerType.HUMAN, "Ahmed", null, Game.PlayerType.HUMAN, "Ali", null);
+
+
+        Game.PlayerType type1 = Game.PlayerType.COMPUTER;
+        Game.PlayerType type2 = Game.PlayerType.COMPUTER;
+
+        Game.PlayerType players[] = new Game.PlayerType[2];
+        players[0] = type1;
+        players[1] = type2;
+
+       Game game = new Game(type1, "karine", Game.Difficulty.EASY, type2, "Tantawy", Game.Difficulty.HARD);
+
+//        Game.PlayerType player1 = Game.PlayerType.COMPUTER;
+//        Game.PlayerType player2 = Game.PlayerType.HUMAN;
+
+
         BoardGUI.game = game;
+        BoardGUI.type1=type1;
+        BoardGUI.type2=type2;
         System.out.println(game.getCurrentTurn());
         ControllerGUI controllerGUI = new ControllerGUI(game);
         BoardGUI.DrawBorad(primaryStage);
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 4; j++) {
-                controllerGUI.InitUi(BoardGUI.whiteImages[i][j], "W", i, j);
+
+        if(type1!= Game.PlayerType.COMPUTER) {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 4; j++) {
+                    controllerGUI.InitUi(BoardGUI.blackImages[i][j], "B", i, j);
+                }
             }
         }
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 4; j++) {
-                controllerGUI.InitUi(BoardGUI.blackImages[i][j], "B", i, j);
+
+        if(type2!= Game.PlayerType.COMPUTER) {
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 4; j++) {
+                    controllerGUI.InitUi(BoardGUI.whiteImages[i][j], "W", i, j);
+                }
             }
         }
     }
 
     public static void main(String[] args) {
         launch();
-    }
-
+    } }
+//
 //    public static void main(String[] args) {
 //
 //        Scanner sc = new Scanner(System.in);
@@ -100,4 +125,4 @@ public class HelloApplication extends Application {
 //        }
 //        System.out.println("Winner is " + game.getWinner().name);
 //    }
-}
+//}

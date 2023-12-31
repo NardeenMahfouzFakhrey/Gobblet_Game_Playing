@@ -86,35 +86,4 @@ public class ControllerGUI {
             });
         }
     }
-
-    private synchronized void HandleMouseMovement(double sceneX, double sceneY) {
-        double deltaX = sceneX - lastX;
-        double deltaY = sceneY - lastY;
-
-        lastX = sceneX;
-        lastY = sceneY;
-
-        double currentXLayout = draggable.getX();
-        double currentYLayout = draggable.getY();
-
-        draggable.setX(currentXLayout + deltaX * 1.5);
-        draggable.setY(currentYLayout + deltaY*1.5);
-    }
-
-    private Pair<Integer, Integer> getSquare(int lastX, int lastY){
-        Pair pair = new Pair<>(null,null);
-        if (lastX < 5 && lastY > 3 ){
-            pair = new Pair<>(5,6);
-        }
-
-       return pair;
-    }
-
-    void checkMove(){
-
-    }
-    void showWinner(){
-
-    }
-
 }

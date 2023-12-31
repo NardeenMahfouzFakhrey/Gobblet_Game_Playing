@@ -176,12 +176,12 @@ public class Game {
             return uncorruptedMove;
         }
     }
-    public static void testGUI(int x1, int y1, int x2, int y2, int stackNo) {
-        System.out.println("x1 = " + x1);
-        System.out.println("y1 = " + y1);
-        System.out.println("x2 = " + x2);
-        System.out.println("y2 = " + y2);
-        System.out.println("stack no = " + stackNo);
-    }
+//    public static void testGUI(int x1, int y1, int x2, int y2, int stackNo) {
+//        System.out.println("x1 = " + x1);
+//        System.out.println("y1 = " + y1);
+//        System.out.println("x2 = " + x2);
+//        System.out.println("y2 = " + y2);
+//        System.out.println("stack no = " + stackNo);
+//    }
 
 }

@@ -40,8 +40,12 @@ public class BoardGUI {
 
     static ImageView[][] transparentImage = new ImageView[2][3];
 
+    static Game.PlayerType type1;
+     static Game.PlayerType type2;
+
 
     public static void DrawBorad(Stage stage){
+
         String imagePath = "Gobblet_background.png";
         Image backgroundImage = new Image(BoardGUI.class.getResource(imagePath).toExternalForm());
         ImageView img = new ImageView(backgroundImage);
@@ -61,6 +65,7 @@ public class BoardGUI {
         hbox = new HBox(blackBox,pane,whiteBox);
 
 
+
         // Create a Scene
         Scene scene = new Scene(hbox,1150,600);
 
@@ -73,6 +78,10 @@ public class BoardGUI {
 
         // Show the Stage
         stage.show();
+
+        if(type2== Game.PlayerType.COMPUTER && type1== Game.PlayerType.COMPUTER) {
+            computerVsComputer();
+        }
     }
 
     public static void setTransparent(){
@@ -130,7 +139,7 @@ public class BoardGUI {
                                 if ((oldX == newX) && (oldY == newY)) {
 
                                 } else {
-                                    Game.testGUI(oldX, oldY, newX, newY, stack);
+                                    //Game.testGUI(oldX, oldY, newX, newY, stack);
                                     if (game.isGameEnded()) {
                                         dragboard.clear();
                                         displayWinnerMessage(game.getWinner());
@@ -147,6 +156,24 @@ public class BoardGUI {
                             event.setDropCompleted(success);
                             game.switchTurn();
                             event.consume();
+                          System.out.println("player type " + type2);
+                        if(type2== Game.PlayerType.COMPUTER) {
+
+                            computerWhiteTurn();
+                        }
+                        else if(type1== Game.PlayerType.COMPUTER) {
+                            computerBlackTurn();
+
+                        }
+                        if (game.isGameEnded()) {
+                            dragboard.clear();
+                            displayWinnerMessage(game.getWinner());
+                            BoardGUI.hbox.getChildren().clear();
+                            BoardGUI.blackBox.getChildren().clear();
+                            BoardGUI.whiteBox.getChildren().clear();
+                            HelloApplication.resetGame();
+                            return;
+                        }
                     }
                     else {
                         dragboard.clear();
@@ -270,4 +297,62 @@ public class BoardGUI {
 
         alert.showAndWait();
     }
+
+    public static void computerWhiteTurn() {
+        GameMove gameMove =  game.getComputerMove();
+
+        System.out.println("computer size "+gameMove.getGobblet().getGobbletSize() + " stackNo " +gameMove.getStackNo() );
+        if(gameMove.getStackNo() != -1) {
+
+            replaceButton(BoardGUI.whiteBox, BoardGUI.whiteImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal()], BoardGUI.whiteImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal()-1]);
+            buttonPanes[gameMove.getX()][gameMove.getY()].getChildren().add(whiteImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal()]);
+
+        }
+        else {
+            System.out.println("computer old move "+  " x "+gameMove.getGobblet().getX() + " y " +gameMove.getGobblet().getY() );
+            System.out.println("computer new  move  "+ "x "+gameMove.getX() + " y " +gameMove.getY() );
+
+            buttonPanes[gameMove.getGobblet().getX()][gameMove.getGobblet().getY()].getChildren().remove(whiteImages[0][gameMove.getGobblet().getGobbletSize().ordinal()]);
+
+            buttonPanes[gameMove.getX()][gameMove.getY()].getChildren().add(whiteImages[0][gameMove.getGobblet().getGobbletSize().ordinal()]);
+        }
+        game.switchTurn();
+    }
+
+    public static void computerBlackTurn() {
+        GameMove gameMove =  game.getComputerMove();
+
+        System.out.println("computer size "+gameMove.getGobblet().getGobbletSize() + " stackNo " +gameMove.getStackNo() );
+        if(gameMove.getStackNo() != -1) {
+
+            replaceButton(BoardGUI.blackBox, BoardGUI.blackImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal()], BoardGUI.blackImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal()-1]);
+            buttonPanes[gameMove.getX()][gameMove.getY()].getChildren().add(blackImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal()]);
+
+        }
+        else {
+            System.out.println("computer old move "+  " x "+gameMove.getGobblet().getX() + " y " +gameMove.getGobblet().getY() );
+            System.out.println("computer new  move  "+ "x "+gameMove.getX() + " y " +gameMove.getY() );
+
+            buttonPanes[gameMove.getGobblet().getX()][gameMove.getGobblet().getY()].getChildren().remove(blackImages[0][gameMove.getGobblet().getGobbletSize().ordinal()]);
+
+            buttonPanes[gameMove.getX()][gameMove.getY()].getChildren().add(blackImages[0][gameMove.getGobblet().getGobbletSize().ordinal()]);
+        }
+        game.switchTurn();
+    }
+
+   public static void computerVsComputer(){
+        while(!game.isGameEnded()) {
+            computerWhiteTurn();
+            Duration duration = Duration.millis(1500);
+            PauseTransition pause = new PauseTransition(duration);
+            pause.play();
+
+            computerBlackTurn();
+        }
+           displayWinnerMessage(game.getWinner());
+           BoardGUI.hbox.getChildren().clear();
+           BoardGUI.blackBox.getChildren().clear();
+           BoardGUI.whiteBox.getChildren().clear();
+           HelloApplication.resetGame();
+       }
 }
