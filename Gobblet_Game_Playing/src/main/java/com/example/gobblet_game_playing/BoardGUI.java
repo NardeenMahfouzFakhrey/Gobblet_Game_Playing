@@ -36,11 +36,9 @@ public class BoardGUI {
     static boolean moveState = false;
     static Game game;
 
-    static boolean isMove = false;
     static GobbletImage[][] gobbletTransparent = new GobbletImage[2][3];
 
     static ImageView[][] transparentImage = new ImageView[2][3];
-
 
 
     public static void DrawBorad(Stage stage){
@@ -109,6 +107,7 @@ public class BoardGUI {
                 buttonPanes[i][j].getChildren().add(button[i][j]);
 
                 buttonPanes[i][j].setOnDragOver(event -> {
+                    moveState = false;
                         if (event.getGestureSource() != buttonPanes[finalI][finalJ] && event.getDragboard().hasImage()) {
                             event.acceptTransferModes(TransferMode.COPY);
                         }
@@ -116,7 +115,7 @@ public class BoardGUI {
                 });
 
                 buttonPanes[i][j].setOnDragDropped(event -> {
-
+                    System.out.println("Dropped");
                     Dragboard dragboard = event.getDragboard();
                     boolean success = false;
                     newX = finalI;
@@ -128,43 +127,49 @@ public class BoardGUI {
                                 buttonPanes[finalI][finalJ].getChildren().add(imageView);
                                 System.out.println("Photo dropped on the button! " + "i = " + finalI + " j = " + finalJ);
                                 success = true;
-                                moveState =true;
                                 if ((oldX == newX) && (oldY == newY)) {
 
                                 } else {
                                     Game.testGUI(oldX, oldY, newX, newY, stack);
                                     if (game.isGameEnded()) {
+                                        dragboard.clear();
                                         displayWinnerMessage(game.getWinner());
+                                        BoardGUI.hbox.getChildren().clear();
+                                        BoardGUI.blackBox.getChildren().clear();
+                                        BoardGUI.whiteBox.getChildren().clear();
+                                        HelloApplication.resetGame();
+                                        return;
                                     }
                                     stack = -1;
-                                    moveState = false;
                                 }
                             }
                             moveState = true;
                             event.setDropCompleted(success);
                             game.switchTurn();
-                            Game.Turn currentTurn = game.getCurrentTurn();
                             event.consume();
-
                     }
                     else {
+                        dragboard.clear();
+                        event.setDropCompleted(false);
                         moveState = false;
                         Alert alert = new Alert(Alert.AlertType.WARNING);
                         alert.setTitle("Warning!");
                         alert.setHeaderText("Incorrect Move");
                         alert.setContentText("Incorrect Move");
-                        alert.showAndWait();
+                        alert.show();
+                        Duration duration = Duration.millis(1500);
+                        PauseTransition pause = new PauseTransition(duration);
+                        pause.setOnFinished(e -> alert.close());
+                        pause.play();
                     }
 
                 });
 
+                ClipboardContent content = new ClipboardContent();
                 imageView.setOnDragDetected(event -> {
-                    System.out.println("Helloooo");
-                    Dragboard dragboard = imageView.startDragAndDrop(TransferMode.ANY);
-
-                    ClipboardContent content = new ClipboardContent();
+                    System.out.println("Detected");
+                    Dragboard dragboard = imageView.startDragAndDrop(TransferMode.COPY);
                     content.putImage(imageView.getImage());
-
                     dragboard.setContent(content);
                     imageView.setImage(null);
                     event.consume();
@@ -173,9 +178,16 @@ public class BoardGUI {
                     stack = -1;
                 });
 
+                // Add DRAG_DONE event handler
+                imageView.setOnDragDone(doneEvent -> {
+                    System.out.println("Done");
+                    if (moveState == false) {
+                        imageView.setImage(content.getImage());
+                    }
+                });
+
             }
         }
-
 
         Pane buttonPane = new Pane();
         for (int i=0 ; i<4 ; i++){

@@ -36,7 +36,7 @@ public class ControllerGUI {
 
             // Set up drag-and-drop for the photo
             gobblet.setOnDragDetected(event -> {
-                System.out.println("Color " + color + " Turn: " + game.getCurrentTurn());
+                BoardGUI.moveState = false;
                 if((game.getCurrentTurn() == Game.Turn.A && color =="B") || (game.getCurrentTurn() == Game.Turn.B && color =="W")) {
                     Dragboard dragboard = gobblet.startDragAndDrop(TransferMode.ANY);
 
@@ -54,12 +54,11 @@ public class ControllerGUI {
                     alert.setHeaderText("Incorrect Move");
                     alert.setContentText("Not your turn!");
                     alert.show();
-                    Duration duration = Duration.millis(2000);
+                    Duration duration = Duration.millis(1500);
                     PauseTransition pause = new PauseTransition(duration);
                     pause.setOnFinished(e -> alert.close());
                     pause.play();
                 }
-
             });
 
             gobblet.setOnDragDone(event -> {
@@ -84,9 +83,7 @@ public class ControllerGUI {
                     }
                     event.consume();
                 }
-
             });
-
         }
     }
 
