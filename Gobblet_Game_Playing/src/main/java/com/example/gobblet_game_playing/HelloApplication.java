@@ -1,21 +1,7 @@
 package com.example.gobblet_game_playing;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.ClipboardContent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.TransferMode;
-import javafx.scene.layout.*;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 public class HelloApplication extends Application {
 
@@ -28,9 +14,9 @@ public class HelloApplication extends Application {
     }
 
     public static void resetGame() {
-
-        Game.PlayerType type1 = Game.PlayerType.HUMAN;
-        Game.PlayerType type2 = Game.PlayerType.HUMAN;
+       /*handling start Game Stage Here*/
+        Game.PlayerType type1 = Game.PlayerType.COMPUTER;
+        Game.PlayerType type2 = Game.PlayerType.COMPUTER;
 
         Game.PlayerType players[] = new Game.PlayerType[2];
         players[0] = type1;
@@ -38,11 +24,11 @@ public class HelloApplication extends Application {
 
        Game game = new Game(type1, "karine", null, type2, "Tantawy", null);
 
+       /*initialize game*/
         BoardGUI.game = game;
         BoardGUI.type1=type1;
         BoardGUI.type2=type2;
-        System.out.println(game.getCurrentTurn());
-        ControllerGUI controllerGUI = new ControllerGUI(game);
+        GobbletControllerGUI controllerGUI = new GobbletControllerGUI(game);
         BoardGUI.DrawBorad(primaryStage);
 
         if(type1 != Game.PlayerType.COMPUTER) {
@@ -51,6 +37,7 @@ public class HelloApplication extends Application {
                     controllerGUI.InitUi(BoardGUI.blackImages[i][j], "B", i, j);
                 }
             }
+            baordControllerGUI.buttonsContoller();
         }
 
         if(type2 != Game.PlayerType.COMPUTER) {
@@ -59,6 +46,7 @@ public class HelloApplication extends Application {
                     controllerGUI.InitUi(BoardGUI.whiteImages[i][j], "W", i, j);
                 }
             }
+            baordControllerGUI.buttonsContoller();
         }
 
         if(type2== Game.PlayerType.COMPUTER && type1== Game.PlayerType.COMPUTER) {

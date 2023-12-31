@@ -1,30 +1,14 @@
 package com.example.gobblet_game_playing;
 
-import javafx.animation.PauseTransition;
-import javafx.event.EventHandler;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.input.*;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import javafx.event.Event;
-import javafx.scene.*;
-import javafx.util.Duration;
-import javafx.util.Pair;
-import javafx.scene.control.Alert;
-public class ControllerGUI {
 
+public class GobbletControllerGUI {
     private ImageView draggable;
-    private Double lastX = null;
-    private Double lastY = null;
     Game game;
-    boolean isMove = false;
 
 
-    public ControllerGUI(Game game) {
+    public GobbletControllerGUI(Game game) {
         this.game = game;
     }
 
@@ -34,33 +18,25 @@ public class ControllerGUI {
 
         if (this.draggable != null) {
 
-            // Set up drag-and-drop for the photo
+            // Set up drag-and-drop for the Gobblet image on the stack
             gobblet.setOnDragDetected(event -> {
                 BoardGUI.moveState = false;
                 if((game.getCurrentTurn() == Game.Turn.A && color =="B") || (game.getCurrentTurn() == Game.Turn.B && color =="W")) {
-                    Dragboard dragboard = gobblet.startDragAndDrop(TransferMode.ANY);
-
+                    Dragboard dragboard = gobblet.startDragAndDrop(TransferMode.COPY);
                     ClipboardContent content = new ClipboardContent();
                     content.putImage(gobblet.getImage());
                     dragboard.setContent(content);
-                    event.consume();
                     BoardGUI.oldX =-1;
                     BoardGUI.oldY = -1;
                     BoardGUI.stack = i;
                 }
                 else {
-                    Alert alert = new Alert(Alert.AlertType.WARNING);
-                    alert.setTitle("Warning!");
-                    alert.setHeaderText("Incorrect Move");
-                    alert.setContentText("Not your turn!");
-                    alert.show();
-                    Duration duration = Duration.millis(1500);
-                    PauseTransition pause = new PauseTransition(duration);
-                    pause.setOnFinished(e -> alert.close());
-                    pause.play();
+                    BoardGUI.alertMessageWarning("it's not your turn");
                 }
+                event.consume();
             });
 
+            /*if image is done dropped replace Gobblets from stack to less size one*/
             gobblet.setOnDragDone(event -> {
                 if(BoardGUI.moveState) {
                     if (j == 0) {
@@ -86,4 +62,5 @@ public class ControllerGUI {
             });
         }
     }
+
 }
