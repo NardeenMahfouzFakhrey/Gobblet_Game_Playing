@@ -114,8 +114,7 @@ public class BoardGUI {
                 ImageView imageView = new ImageView();
                 buttonPanes[i][j].getChildren().add(button[i][j]);
 
-                if (type2 == Game.PlayerType.COMPUTER && type1 == Game.PlayerType.COMPUTER) {
-
+                if (type1 == Game.PlayerType.HUMAN || type2 == Game.PlayerType.HUMAN) {
 
                     buttonPanes[i][j].setOnDragOver(event -> {
                         moveState = false;
