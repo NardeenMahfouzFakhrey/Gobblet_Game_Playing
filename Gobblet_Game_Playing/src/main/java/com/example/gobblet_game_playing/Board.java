@@ -310,13 +310,8 @@ public class Board {
         gobblet.setX(x2);
         gobblet.setY(y2);
         board[x2][y2].push(gobblet);
+        Game.turnStartTime =  System.currentTimeMillis();
 
-        /* todo if pop from player's stack is to be handled here:
-        if(!onBoard){
-            return gobblet;
-        }
-        return null;
-    */
     }
 
     /**

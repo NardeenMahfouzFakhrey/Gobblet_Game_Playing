@@ -33,9 +33,9 @@ public class ComputerPlayer extends Player {
     }
 
     // Returns move played by the computer
-    public GameMove playGobbletMove(Board board) {
+    public GameMove playGobbletMove(Board board,Game.Turn turn) {
         bestMove = null;
-        alphaBeta(board, turns[playerColor.ordinal()], Integer.MIN_VALUE, Integer.MAX_VALUE, searchDepth, true);
+       bestMove = iterativeDeepening(board,turn,searchDepth);
         return bestMove;
     }
 
@@ -323,9 +323,13 @@ public class ComputerPlayer extends Player {
         for (int depth = 1; depth <= maxDepth; depth++) {
             alphaBeta(board, turn, Integer.MIN_VALUE, Integer.MAX_VALUE, depth, true);
             if (Game.isTurnTimeLimitExceeded() || board.isWinningState(gobbletColors[turn.ordinal()]) == gobbletColors[turn.ordinal()]) {
+                if (bestMove == null){
+                    ArrayList<GameMove> possibleMoves = generatePossibleMoves(board, turn);
+                    bestMove = possibleMoves.get(0);
+                }
                 return this.bestMove;
             }
-            // System.out.println("Depth in ITS: " + depth);
+             //System.out.println("Depth in ITS: " + depth);
         }
         return this.bestMove;
     }

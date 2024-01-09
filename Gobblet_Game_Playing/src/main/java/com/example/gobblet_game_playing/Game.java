@@ -7,7 +7,7 @@ public class Game {
     private PlayerPair players;
 
     static long turnStartTime =0 ;
-    static long turnTimeLimitMillis = 30000;
+    static long turnTimeLimitMillis = 10000;
 
     private Turn currentTurn;
     private GobbletColor[] gobbletColors = GobbletColor.values();
@@ -165,12 +165,12 @@ public class Game {
 
     public GameMove getComputerMove(){
         if(currentTurn.ordinal()==0){
-            GameMove move = ((ComputerPlayer) players.getPlayer1()).playGobbletMove(this.board);
+            GameMove move = ((ComputerPlayer) players.getPlayer1()).playGobbletMove(this.board,currentTurn);
             GameMove uncorruptedMove = new GameMove(move);
             board.playRound(move, currentTurn);
             return uncorruptedMove;
         }else{
-            GameMove move = ((ComputerPlayer) players.getPlayer2()).playGobbletMove(this.board);
+            GameMove move = ((ComputerPlayer) players.getPlayer2()).playGobbletMove(this.board,currentTurn);
             GameMove uncorruptedMove = new GameMove(move);
             board.playRound(move, currentTurn);
             return uncorruptedMove;
