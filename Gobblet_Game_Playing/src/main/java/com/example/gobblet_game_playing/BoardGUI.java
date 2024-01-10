@@ -1,7 +1,6 @@
 package com.example.gobblet_game_playing;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -40,8 +39,9 @@ public class BoardGUI {
     static int newY = -1;
     static int stack = -1;
     static boolean moveState = false;
-
-
+    static String player1_name;
+    static String player2_name;
+    static Button restartButton = new Button("Restart");
 
 
     public static void DrawBorad(Stage stage) {
@@ -107,7 +107,7 @@ public class BoardGUI {
     }
 
     public static void DrawBlackGobblets() {
-        Label label = new Label("Player 1");
+        Label label = new Label(player1_name);
         label.setAlignment(Pos.TOP_CENTER);
         label.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
 
@@ -131,7 +131,7 @@ public class BoardGUI {
 
     public static void DrawWhiteGobblets() {
 
-        Label label = new Label("Player 2");
+        Label label = new Label(player2_name);
         label.setAlignment(Pos.TOP_CENTER);
         label.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
 
@@ -149,6 +149,10 @@ public class BoardGUI {
         whiteBox.getChildren().add(label);
         whiteBox.setMargin(label, new Insets(10, 0, 65, 0));
         whiteBox.getChildren().addAll(whiteImages[0][3], whiteImages[1][3], whiteImages[2][3]);
+
+        restartButton.setAlignment(Pos.BOTTOM_CENTER);
+        whiteBox.getChildren().add(restartButton);
+        whiteBox.setMargin(restartButton, new Insets(65, 0, 10, 0));
 
         whiteBox.setAlignment(Pos.TOP_CENTER);
         whiteBox.setSpacing(25);
