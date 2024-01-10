@@ -3,12 +3,10 @@ package com.example.gobblet_game_playing;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import java.util.Scanner;
-
 public class HelloApplication extends Application {
 
-    private static Stage primaryStage;
-    private static Stage startStage;
+    static Stage primaryStage;
+    static Stage startStage;
     @Override
     public void start(Stage primaryStage) {
         startStage = primaryStage;
@@ -16,11 +14,10 @@ public class HelloApplication extends Application {
     }
     public static void openPrimaryStage() {
         primaryStage = new Stage();
+        startStage.close();
         resetGame();
         primaryStage.show();
 
-        // Close the start stage when opening the primary stage
-        startStage.close();
     }
     public static void resetGame() {
        /*handling start Game Stage Here*/
@@ -43,7 +40,8 @@ public class HelloApplication extends Application {
         BoardGUI.player1_name = player1_name;
         BoardGUI.player2_name = player2_name;
         GobbletControllerGUI controllerGUI = new GobbletControllerGUI(game);
-        BoardGUI.DrawBorad(primaryStage);
+        BoardGUI.DrawBoard(primaryStage);
+        BoardControllerGUI.restartHandler();
 
         if(type1 != Game.PlayerType.COMPUTER) {
             for (int i = 0; i < 3; i++) {
@@ -51,7 +49,7 @@ public class HelloApplication extends Application {
                     controllerGUI.InitUi(BoardGUI.blackImages[i][j], "B", i, j);
                 }
             }
-            baordControllerGUI.buttonsContoller();
+            BoardControllerGUI.buttonsController();
         }
 
         if(type2 != Game.PlayerType.COMPUTER) {
@@ -60,7 +58,7 @@ public class HelloApplication extends Application {
                     controllerGUI.InitUi(BoardGUI.whiteImages[i][j], "W", i, j);
                 }
             }
-            baordControllerGUI.buttonsContoller();
+            BoardControllerGUI.buttonsController();
         }
 
         if(type2== Game.PlayerType.COMPUTER && type1== Game.PlayerType.COMPUTER) {

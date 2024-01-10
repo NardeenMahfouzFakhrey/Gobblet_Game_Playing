@@ -1,17 +1,21 @@
 package com.example.gobblet_game_playing;
+import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 import java.util.concurrent.CountDownLatch;
@@ -29,8 +33,8 @@ public class BoardGUI {
     static ImageView[][] transparentImage = new ImageView[2][3];
     static ImageView[][] whiteImages = new ImageView[3][4];
 
-    static VBox blackBox = new VBox();
-    static VBox whiteBox = new VBox();
+    static VBox blackBox;
+    static VBox whiteBox;
     static HBox hbox=new HBox();
 
     static int oldX = -1;
@@ -41,12 +45,14 @@ public class BoardGUI {
     static boolean moveState = false;
     static String player1_name;
     static String player2_name;
-    static Button restartButton = new Button("Restart");
+    static Button restartButton;
 
+    static CountdownTimer timer;
 
-    public static void DrawBorad(Stage stage) {
+    public static void DrawBoard(Stage stage) {
+        int h = 0;
         BorderPane pane = new BorderPane();
-
+        restartButton = new Button("Restart");
         /*draw game image on board*/
         String imagePath = "Gobblet_background.png";
         Image backgroundImage = new Image(BoardGUI.class.getResource(imagePath).toExternalForm());
@@ -57,7 +63,33 @@ public class BoardGUI {
 
         pane.setCenter(img);
         pane.setStyle("-fx-border-color: black; -fx-border-width: 1 0 0 0;");
-
+        VBox imgVbox = new VBox();
+        if(type1 == Game.PlayerType.HUMAN || type2 == Game.PlayerType.HUMAN) {
+            h = 35;
+            timer = new CountdownTimer();
+            imgVbox.getChildren().addAll(timer);
+            Timeline checkCountdownTimeline = new Timeline(
+                    new KeyFrame(Duration.seconds(1), event -> {
+                        if (timer.isCountdownDone()) {
+                            System.out.println("Countdown is done!");
+                            showAlert();
+                            game.switchTurn();
+                            if(type1 == Game.PlayerType.COMPUTER){
+                                GameMove gameMove = BoardGUI.game.getComputerMove();
+                                BoardGUI.computerBlackTurn(gameMove);
+                            }
+                            else if(type2 == Game.PlayerType.COMPUTER){
+                                GameMove gameMove = BoardGUI.game.getComputerMove();
+                                BoardGUI.computerWhiteTurn(gameMove);
+                            }
+                            timer.restartTimer(); // Restart the timer if needed
+                        }
+                    })
+            );
+            checkCountdownTimeline.setCycleCount(Timeline.INDEFINITE);
+            checkCountdownTimeline.play();
+        }
+        imgVbox.getChildren().add(pane);
         /*place buttons on the Gobblet baord*/
         Pane buttonPane = placeButtons();
         pane.getChildren().add(buttonPane);
@@ -67,9 +99,9 @@ public class BoardGUI {
         DrawWhiteGobblets();
         setTransparent();
 
-        hbox = new HBox(blackBox, pane, whiteBox);
+        hbox = new HBox(blackBox, imgVbox, whiteBox);
         // Create a Scene
-        Scene scene = new Scene(hbox, 1150, 600);
+        Scene scene = new Scene(hbox, 1150, 600+h);
         // Set the Scene for the Stage
         stage.setScene(scene);
         // Set the title of the Stage
@@ -107,6 +139,7 @@ public class BoardGUI {
     }
 
     public static void DrawBlackGobblets() {
+        blackBox = new VBox();
         Label label = new Label(player1_name);
         label.setAlignment(Pos.TOP_CENTER);
         label.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
@@ -130,7 +163,7 @@ public class BoardGUI {
     }
 
     public static void DrawWhiteGobblets() {
-
+        whiteBox = new VBox();
         Label label = new Label(player2_name);
         label.setAlignment(Pos.TOP_CENTER);
         label.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
@@ -316,6 +349,19 @@ public class BoardGUI {
         PauseTransition pause = new PauseTransition(duration);
         pause.setOnFinished(e -> alert.close());
         pause.play();
+    }
+    private static void showAlert() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.initStyle(StageStyle.UNDECORATED);
+        alert.setContentText("Time Out!");
+        alert.show();
+
+        // Set up a Timeline to automatically close the alert after 5 seconds
+        Timeline closeAlertTimeline = new Timeline(
+                new KeyFrame(Duration.seconds(2), event -> alert.setResult(ButtonType.OK))
+        );
+        closeAlertTimeline.setCycleCount(1);
+        closeAlertTimeline.play();
     }
 
     public static void setTransparent() {

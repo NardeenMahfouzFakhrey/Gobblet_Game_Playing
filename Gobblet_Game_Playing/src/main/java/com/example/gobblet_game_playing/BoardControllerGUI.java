@@ -4,11 +4,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
+import javafx.stage.Stage;
 
-public class baordControllerGUI {
+public class BoardControllerGUI {
 
-    public static void buttonsContoller() {
-
+    public static void buttonsController() {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
 
@@ -72,6 +72,7 @@ public class baordControllerGUI {
                                 }
                             }
                             BoardGUI.moveState = true;
+                            BoardGUI.timer.restartTimer();
                             event.setDropCompleted(success);
                             BoardGUI.game.switchTurn();
                             event.consume();
@@ -96,5 +97,13 @@ public class baordControllerGUI {
                     });
                 }
             }
+      }
+
+      public static void restartHandler(){
+        BoardGUI.restartButton.setOnAction(event -> {
+            HelloApplication.startStage.close();
+            HelloApplication.primaryStage.close();
+            StartGameGUI.GameStart(HelloApplication.startStage);
+        });
       }
 }

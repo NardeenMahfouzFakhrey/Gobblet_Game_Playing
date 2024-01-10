@@ -76,14 +76,16 @@ public class StartGameGUI {
 
         Label player1Label = new Label("Player 1");
         player1Label.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        TextField player1 = new TextField("Player 1");
+        TextField player1 = new TextField("");
+        player1.setPromptText("Player 1");
         HBox player1Box = new HBox(10);
         player1Box.getChildren().addAll(player1Label, player1);
         player1Box.setAlignment(Pos.CENTER);
 
         Label player2Label = new Label("Player 2");
         player2Label.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        TextField player2 = new TextField("Player 2");
+        TextField player2 = new TextField("");
+        player2.setPromptText("Player 2");
         HBox player2Box = new HBox(10);
         player2Box.getChildren().addAll(player2Label, player2);
         player2Box.setAlignment(Pos.CENTER);
@@ -115,7 +117,8 @@ public class StartGameGUI {
 
         Label HumanPlayerLabel = new Label("Player");
         HumanPlayerLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-        TextField HumanPlayer = new TextField("Player");
+        TextField HumanPlayer = new TextField("");
+        HumanPlayer.setPromptText("Player");
         HBox HumanPlayerBox = new HBox(10);
         HumanPlayerBox.getChildren().addAll(HumanPlayerLabel, HumanPlayer);
         HumanPlayerBox.setAlignment(Pos.CENTER);
