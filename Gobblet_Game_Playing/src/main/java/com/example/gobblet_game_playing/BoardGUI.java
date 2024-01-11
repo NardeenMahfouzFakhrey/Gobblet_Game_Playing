@@ -23,7 +23,7 @@ import javafx.util.Duration;
 import java.util.concurrent.CountDownLatch;
 
 public class BoardGUI {
-
+    static boolean RestartGame = false;
     static Game game;
     static Game.PlayerType type1;
     static Game.PlayerType type2;
@@ -295,54 +295,56 @@ public class BoardGUI {
     public static void computerWhiteTurn(GameMove gameMove){
 //        PauseTransition initialDelay = new PauseTransition(Duration.seconds(3)); //  seconds delay
 //        initialDelay.setOnFinished(event -> {
-        System.out.println("*****************WHITE TURN*****************");
-        System.out.println("computer size " + gameMove.getGobblet().getGobbletSize() + " stackNo " + gameMove.getStackNo());
-        if (gameMove.getStackNo() != -1) {
+        if(!game.isGameEnded()) {
+            System.out.println("*****************WHITE TURN*****************");
+            System.out.println("computer size " + gameMove.getGobblet().getGobbletSize() + " stackNo " + gameMove.getStackNo());
+            if (gameMove.getStackNo() != -1) {
 
-            if(gameMove.getGobblet().getGobbletSize().ordinal() == 0){
-                replaceButton(BoardGUI.whiteBox, BoardGUI.whiteImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal()], transparentImage[0][gameMove.getStackNo()]);
-            }else {
-                replaceButton(BoardGUI.whiteBox, BoardGUI.whiteImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal()], BoardGUI.whiteImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal() - 1]);
-            }
-            buttonPanes[gameMove.getX()][gameMove.getY()].getChildren().add(whiteImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal()]);
-        } else {
-            System.out.println("computer old move " + " x " + gameMove.getGobblet().getX() + " y " + gameMove.getGobblet().getY());
-            System.out.println("computer new  move  " + "x " + gameMove.getX() + " y " + gameMove.getY());
-            System.out.println("old x = " + gameMove.getGobblet().getX());
-            System.out.println("old y = " + gameMove.getGobblet().getY());
-            ObservableList<Node> children = buttonPanes[gameMove.getGobblet().getX()][gameMove.getGobblet().getY()].getChildren();
-            if (!children.isEmpty()) {
-                children.remove(children.size() - 1);
-            }
-            //ImageView i = children.get(children.size()-1);
-            ImageView originalImageView = whiteImages[0][gameMove.getGobblet().getGobbletSize().ordinal()];
-            Image originalImage = originalImageView.getImage();
-            ImageView copyImageView = new ImageView(originalImage);
-            copyImageView.setFitWidth(originalImageView.getFitWidth());
-            copyImageView.setFitHeight(originalImageView.getFitHeight());
-            // Add the copy to the new location
-            buttonPanes[gameMove.getX()][gameMove.getY()].getChildren().add(copyImageView);
+                if (gameMove.getGobblet().getGobbletSize().ordinal() == 0) {
+                    replaceButton(BoardGUI.whiteBox, BoardGUI.whiteImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal()], transparentImage[0][gameMove.getStackNo()]);
+                } else {
+                    replaceButton(BoardGUI.whiteBox, BoardGUI.whiteImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal()], BoardGUI.whiteImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal() - 1]);
+                }
+                buttonPanes[gameMove.getX()][gameMove.getY()].getChildren().add(whiteImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal()]);
+            } else {
+                System.out.println("computer old move " + " x " + gameMove.getGobblet().getX() + " y " + gameMove.getGobblet().getY());
+                System.out.println("computer new  move  " + "x " + gameMove.getX() + " y " + gameMove.getY());
+                System.out.println("old x = " + gameMove.getGobblet().getX());
+                System.out.println("old y = " + gameMove.getGobblet().getY());
+                ObservableList<Node> children = buttonPanes[gameMove.getGobblet().getX()][gameMove.getGobblet().getY()].getChildren();
+                if (!children.isEmpty()) {
+                    children.remove(children.size() - 1);
+                }
+                //ImageView i = children.get(children.size()-1);
+                ImageView originalImageView = whiteImages[0][gameMove.getGobblet().getGobbletSize().ordinal()];
+                Image originalImage = originalImageView.getImage();
+                ImageView copyImageView = new ImageView(originalImage);
+                copyImageView.setFitWidth(originalImageView.getFitWidth());
+                copyImageView.setFitHeight(originalImageView.getFitHeight());
+                // Add the copy to the new location
+                buttonPanes[gameMove.getX()][gameMove.getY()].getChildren().add(copyImageView);
 //            buttonPanes[gameMove.getGobblet().getX()][gameMove.getGobblet().getY()].getChildren().remove(whiteImages[0][gameMove.getGobblet().getGobbletSize().ordinal()]);
 //            buttonPanes[gameMove.getX()][gameMove.getY()].getChildren().add(whiteImages[0][gameMove.getGobblet().getGobbletSize().ordinal()]);
-        }
-        game.switchTurn();
-        timer.restartTimer(30);
+            }
+            game.switchTurn();
+            timer.restartTimer(30);
 //        });
 //        initialDelay.play();
-
+        }
     }
 
     public static void computerBlackTurn(GameMove gameMove) {
 //        PauseTransition initialDelay = new PauseTransition(Duration.seconds(3)); //  seconds delay
 //        initialDelay.setOnFinished(event -> {
+        if (!game.isGameEnded()) {
             System.out.println("*****************BLACK TURN*****************");
 
             System.out.println("computer size " + gameMove.getGobblet().getGobbletSize() + " stackNo " + gameMove.getStackNo());
             if (gameMove.getStackNo() != -1) {
 
-                if(gameMove.getGobblet().getGobbletSize().ordinal() == 0){
+                if (gameMove.getGobblet().getGobbletSize().ordinal() == 0) {
                     replaceButton(BoardGUI.blackBox, BoardGUI.blackImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal()], transparentImage[0][gameMove.getStackNo()]);
-                }else {
+                } else {
                     replaceButton(BoardGUI.blackBox, BoardGUI.blackImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal()], BoardGUI.blackImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal() - 1]);
                 }
                 buttonPanes[gameMove.getX()][gameMove.getY()].getChildren().add(blackImages[gameMove.getStackNo()][gameMove.getGobblet().getGobbletSize().ordinal()]);
@@ -369,9 +371,9 @@ public class BoardGUI {
             game.switchTurn();
             timer.restartTimer(30);
 //        });
-//        initialDelay.play();
+//        initialDelay.play(); }
+        }
     }
-
 //    public static void computerVsComputer() {
 //        Thread computerVsComputerThread = new Thread(() -> {
 //            while (!game.isGameEnded()) {
@@ -416,8 +418,9 @@ public class BoardGUI {
 //    }
 
     public static void computerVsComputer() {
+        BoardGUI.RestartGame=false;
         Thread computerVsComputerThread = new Thread(() -> {
-            while (!game.isGameEnded()) {
+            while (!game.isGameEnded() && !RestartGame) {
                 GameMove gameMove = game.getComputerMove();
                 GameMove finalGameMove = gameMove;
                 Platform.runLater(() -> computerBlackTurn(finalGameMove));
@@ -437,13 +440,14 @@ public class BoardGUI {
             }
 
             Platform.runLater(() -> {
+                if(!RestartGame) {
                 displayWinnerMessage(game.getWinner());
                 BoardGUI.hbox.getChildren().clear();
                 BoardGUI.blackBox.getChildren().clear();
                 BoardGUI.whiteBox.getChildren().clear();
                 HelloApplication.startStage.close();
                 HelloApplication.primaryStage.close();
-                StartGameGUI.GameStart(HelloApplication.startStage);
+                StartGameGUI.GameStart(HelloApplication.startStage); }
             });
         });
 

@@ -113,6 +113,7 @@ public class BoardControllerGUI {
         BoardGUI.restartButton.setOnAction(event -> {
             HelloApplication.startStage.close();
             HelloApplication.primaryStage.close();
+            BoardGUI.RestartGame =true;
             StartGameGUI.GameStart(HelloApplication.startStage);
         });
     }

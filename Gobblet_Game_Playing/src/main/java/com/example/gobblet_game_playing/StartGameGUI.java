@@ -37,6 +37,7 @@ public class StartGameGUI {
         //startStage = new Stage();
         startStage = stage;
 
+
         startBox.setPrefHeight(300);
         startBox.setPrefWidth(550);
         // vbox.setPadding(new Insets(50,60,50,60));
