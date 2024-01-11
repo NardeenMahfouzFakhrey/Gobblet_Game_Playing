@@ -16,6 +16,7 @@ public class GobbletControllerGUI {
 
         this.draggable = gobblet;
 
+
         if (this.draggable != null) {
 
             // Set up drag-and-drop for the Gobblet image on the stack

@@ -44,6 +44,7 @@ public class HelloApplication extends Application {
         BoardControllerGUI.restartHandler();
 
         if(type1 != Game.PlayerType.COMPUTER) {
+            BoardGUI.setDrawPlayer1();
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 4; j++) {
                     controllerGUI.InitUi(BoardGUI.blackImages[i][j], "B", i, j);
@@ -53,6 +54,7 @@ public class HelloApplication extends Application {
         }
 
         if(type2 != Game.PlayerType.COMPUTER) {
+            BoardGUI.setDrawPlayer2();
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 4; j++) {
                     controllerGUI.InitUi(BoardGUI.whiteImages[i][j], "W", i, j);
