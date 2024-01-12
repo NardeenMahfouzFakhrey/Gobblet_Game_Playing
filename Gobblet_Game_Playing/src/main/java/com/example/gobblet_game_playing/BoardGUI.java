@@ -76,22 +76,29 @@ public class BoardGUI {
 
         timer = new CountdownTimer(30);
         if(type1 == Game.PlayerType.HUMAN || type2 == Game.PlayerType.HUMAN) {
-            if(type1 == Game.PlayerType.HUMAN){
-            drawPlayer1 = new Button("Draw");
-            drawPlayer1.setBackground(Background.fill(Color.RED));
-            hboxNav.getChildren().add(drawPlayer1);
+                hboxNav.setAlignment(Pos.CENTER);
+                if(type1 == Game.PlayerType.HUMAN){
+                drawPlayer1 = new Button("Draw");
+                drawPlayer1.setBackground(Background.fill(Color.RED));
+                hboxNav.getChildren().add(drawPlayer1);
+                HBox.setHgrow(drawPlayer1, Priority.NEVER);
+                HBox.setMargin(drawPlayer1, new Insets(0, 5, 0, 0));
             }
-            h = 35;
-            hboxNav.setSpacing(275);
-            hboxNav.setAlignment(Pos.CENTER);
             hboxNav.getChildren().add(timer);
-            //timer.setAlignment(Pos.CENTER);
-            imgVbox.getChildren().addAll(hboxNav);
+            HBox.setHgrow(timer, Priority.ALWAYS);
+            timer.setAlignment(Pos.TOP_CENTER);
             if(type2 == Game.PlayerType.HUMAN){
                 drawPlayer2 = new Button("Draw");
                 drawPlayer2.setBackground(Background.fill(Color.RED));
                 hboxNav.getChildren().add(drawPlayer2);
-            }
+                HBox.setHgrow(drawPlayer2, Priority.NEVER);
+                HBox.setMargin(drawPlayer2, new Insets(0, 0, 0, 5));
+            }else
+                HBox.setMargin(timer, new Insets(0, 45, 0, 0));
+            h = 35;
+            hboxNav.setPadding(new Insets(0,5,0,5));
+            //hboxNav.setSpacing(275);
+            imgVbox.getChildren().addAll(hboxNav);
             Timeline checkCountdownTimeline = new Timeline(
                     new KeyFrame(Duration.seconds(1), event -> {
                         if (timer.isCountdownDone()) {
