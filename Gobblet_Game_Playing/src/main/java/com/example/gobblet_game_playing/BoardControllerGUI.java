@@ -96,11 +96,16 @@ public class BoardControllerGUI {
 
                         } else if (BoardGUI.type2 == Game.PlayerType.COMPUTER) {
                             GameMove gameMove = BoardGUI.game.getComputerMove();
+                            if(BoardGUI.game.isGameEnded()) {
+                                BoardGUI.computerWhiteTurn(gameMove);
+                            }
+                            else {
                             PauseTransition initialDelay = new PauseTransition(Duration.seconds(3)); //  seconds delay
                             initialDelay.setOnFinished(e2 -> {
                             BoardGUI.computerWhiteTurn(gameMove);
                             });
                             initialDelay.play();
+                        }
                         }
                         if (BoardGUI.game.isGameEnded()) {
                             dragboard.clear();

@@ -302,7 +302,6 @@ public class BoardGUI {
     public static void computerWhiteTurn(GameMove gameMove){
 //        PauseTransition initialDelay = new PauseTransition(Duration.seconds(3)); //  seconds delay
 //        initialDelay.setOnFinished(event -> {
-        if(!game.isGameEnded()) {
             System.out.println("*****************WHITE TURN*****************");
             System.out.println("computer size " + gameMove.getGobblet().getGobbletSize() + " stackNo " + gameMove.getStackNo());
             if (gameMove.getStackNo() != -1) {
@@ -337,13 +336,13 @@ public class BoardGUI {
             timer.restartTimer(30);
 //        });
 //        initialDelay.play();
-        }
+
     }
 
     public static void computerBlackTurn(GameMove gameMove) {
 //        PauseTransition initialDelay = new PauseTransition(Duration.seconds(3)); //  seconds delay
 //        initialDelay.setOnFinished(event -> {
-        if (!game.isGameEnded()) {
+
             System.out.println("*****************BLACK TURN*****************");
 
             System.out.println("computer size " + gameMove.getGobblet().getGobbletSize() + " stackNo " + gameMove.getStackNo());
@@ -379,7 +378,7 @@ public class BoardGUI {
             timer.restartTimer(30);
 //        });
 //        initialDelay.play(); }
-        }
+
     }
 //    public static void computerVsComputer() {
 //        Thread computerVsComputerThread = new Thread(() -> {
@@ -428,15 +427,20 @@ public class BoardGUI {
         BoardGUI.RestartGame=false;
         Thread computerVsComputerThread = new Thread(() -> {
             while (!game.isGameEnded() && !RestartGame) {
+
                 GameMove gameMove = game.getComputerMove();
                 GameMove finalGameMove = gameMove;
+
                 Platform.runLater(() -> computerBlackTurn(finalGameMove));
                 try {
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                gameMove = game.getComputerMove();
+                 if(game.isGameEnded()) {
+                     break;
+                 }
+                 gameMove = game.getComputerMove();
                 GameMove finalGameMove1 = gameMove;
                 Platform.runLater(() -> computerWhiteTurn(finalGameMove1));
                 try {
