@@ -52,4 +52,7 @@ public class CountdownTimer extends VBox {
     public boolean isCountdownDone() {
         return isCountdownDone;
     }
+    public void stopTimer() {
+        timeline.stop();
+    }
 }

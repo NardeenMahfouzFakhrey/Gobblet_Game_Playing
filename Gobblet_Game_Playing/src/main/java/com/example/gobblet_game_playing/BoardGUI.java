@@ -282,7 +282,7 @@ public class BoardGUI {
         alert.setTitle("Game Over!");
         alert.setHeaderText("Congratulations, " + winner.getName() + "!");
         alert.setContentText("You are the winner!");
-
+        timer.stopTimer();
         // Add an image to the alert
         Image winnerImage = new Image(BoardGUI.class.getResource("winner.png").toExternalForm());
         ImageView imageView = new ImageView(winnerImage);
