@@ -1,6 +1,7 @@
 package com.example.gobblet_game_playing;
 
 import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
@@ -67,7 +68,14 @@ public class BoardControllerGUI {
                                 //Game.testGUI(oldX, oldY, newX, newY, stack);
                                 if (BoardGUI.game.isGameEnded()) {
                                     dragboard.clear();
-                                    BoardGUI.displayWinnerMessage(BoardGUI.game.getWinner());
+                                    PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+                                    pause.setOnFinished(ev1 -> {
+                                        Platform.runLater(() -> {
+                                            System.out.println("Delay finished");
+                                            BoardGUI.displayWinnerMessage(BoardGUI.game.getWinner());
+                                        });
+                                    });
+                                    pause.play();
                                     return;
                                 }
                                 BoardGUI.stack = -1;
@@ -96,8 +104,15 @@ public class BoardControllerGUI {
                         }
                         if (BoardGUI.game.isGameEnded()) {
                             dragboard.clear();
-                            BoardGUI.displayWinnerMessage(BoardGUI.game.getWinner());
-                            }
+                            PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
+                            pause.setOnFinished(ev2 -> {
+                                Platform.runLater(() -> {
+                                    System.out.println("Delay finished");
+                                    BoardGUI.displayWinnerMessage(BoardGUI.game.getWinner());
+                                });
+                            });
+                            pause.play();
+                        }
                     } else {
                         dragboard.clear();
                         event.setDropCompleted(false);
