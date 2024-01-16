@@ -16,7 +16,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -82,6 +84,10 @@ public class BoardGUI {
             if (type1 == Game.PlayerType.HUMAN) {
                 drawPlayer1 = new Button("Draw");
                 drawPlayer1.setBackground(Background.fill(Color.RED));
+                drawPlayer1.setShape(new Circle(4));
+                drawPlayer1.setStyle("-fx-background-color: #8B0000; -fx-text-fill: white;");
+                setSymbol(drawPlayer1,"✘");
+
                 hboxNav.getChildren().add(drawPlayer1);
                 HBox.setHgrow(drawPlayer1, Priority.NEVER);
                 HBox.setMargin(drawPlayer1, new Insets(0, 5, 0, 0));
@@ -92,14 +98,18 @@ public class BoardGUI {
             if (type2 == Game.PlayerType.HUMAN) {
                 drawPlayer2 = new Button("Draw");
                 drawPlayer2.setBackground(Background.fill(Color.RED));
+                drawPlayer2.setShape(new Circle(4));
+                drawPlayer2.setStyle("-fx-background-color:#8B0000; -fx-text-fill: white;");
+                setSymbol(drawPlayer2,"✘");
                 hboxNav.getChildren().add(drawPlayer2);
                 HBox.setHgrow(drawPlayer2, Priority.NEVER);
                 HBox.setMargin(drawPlayer2, new Insets(0, 0, 0, 5));
             } else
                 HBox.setMargin(timer, new Insets(0, 45, 0, 0));
-            h = 35;
+            h = 40;
             hboxNav.setPadding(new Insets(0, 5, 0, 5));
             //hboxNav.setSpacing(275);
+            hboxNav.setPrefHeight(40);
             imgVbox.getChildren().addAll(hboxNav);
             Timeline checkCountdownTimeline = new Timeline(
                     new KeyFrame(Duration.seconds(1), event -> {
@@ -142,7 +152,7 @@ public class BoardGUI {
 
         hbox = new HBox(blackBox, imgVbox, whiteBox);
         // Create a Scene
-        Scene scene = new Scene(hbox, 1150, 630 + h);
+        Scene scene = new Scene(hbox, 1150, 628 + h);
         // Set the Scene for the Stage
         stage.setScene(scene);
         // Set the title of the Stage
@@ -152,15 +162,27 @@ public class BoardGUI {
         stage.show();
     }
 
+    private static void setSymbol(Button button, String symbol) {
+        Text text = new Text(symbol);
+        text.setFont(Font.font(20));
+        button.setGraphic(text);
+    }
+
     public static void setDrawPlayer1() {
         drawPlayer1.setOnAction(event -> {
+
             if (game.getCurrentTurn() == Game.Turn.A) {
                 if (drawFlag1) {
-                    drawPlayer1.setBackground(Background.fill(Color.RED));
                     drawFlag1 = false;
+
+                    drawPlayer1.setStyle("-fx-background-color: #8B0000; -fx-text-fill: white;"); // Darker red
+                    setSymbol(drawPlayer1, "✘");
+
                 } else {
-                    drawPlayer1.setBackground(Background.fill(Color.GREEN));
                     drawFlag1 = true;
+
+                    drawPlayer1.setStyle("-fx-background-color: #2E8B57; -fx-text-fill: white;"); // Darker green
+                    setSymbol(drawPlayer1, "✔");
                 }
                 if (drawFlag1 && drawFlag2 || (type2 == Game.PlayerType.COMPUTER && drawFlag1)) {
                     drawFlag1 = false;
@@ -178,11 +200,16 @@ public class BoardGUI {
         drawPlayer2.setOnAction(event -> {
             if (game.getCurrentTurn() == Game.Turn.B) {
                 if (drawFlag2) {
-                    drawPlayer2.setBackground(Background.fill(Color.RED));
                     drawFlag2 = false;
+
+                    drawPlayer2.setStyle("-fx-background-color: #8B0000; -fx-text-fill: white;"); // Darker red
+                    setSymbol(drawPlayer2, "✘");
+
                 } else {
-                    drawPlayer2.setBackground(Background.fill(Color.GREEN));
                     drawFlag2 = true;
+
+                    drawPlayer2.setStyle("-fx-background-color: #2E8B57; -fx-text-fill: white;"); // Darker green
+                    setSymbol(drawPlayer2, "✔");
                 }
                 if (drawFlag1 && drawFlag2) {
                     drawFlag1 = false;
@@ -195,7 +222,6 @@ public class BoardGUI {
             }
         });
     }
-
     public static Pane placeButtons() {
 
         for (int i = 0; i < 4; i++) {
