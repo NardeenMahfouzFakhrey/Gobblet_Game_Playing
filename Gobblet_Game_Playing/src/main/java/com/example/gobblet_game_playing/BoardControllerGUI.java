@@ -85,6 +85,7 @@ public class BoardControllerGUI {
                         BoardGUI.timer.restartTimer(30);
                         event.setDropCompleted(success);
                         BoardGUI.game.switchTurn();
+                        BoardGUI.game.setCurrentTurn(BoardGUI.game.getCurrentTurn());
                         event.consume();
                         if (BoardGUI.type1 == Game.PlayerType.COMPUTER) {
                             GameMove gameMove = BoardGUI.game.getComputerMove();

@@ -150,6 +150,7 @@ public class StartGameGUI {
             if(player2.getText().isEmpty()){
                 players_name[1] = "Player 2";
             }
+
             HelloApplication.openPrimaryStage();
         });
 

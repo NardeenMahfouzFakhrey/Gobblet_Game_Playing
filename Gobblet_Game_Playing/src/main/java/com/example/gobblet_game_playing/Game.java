@@ -1,5 +1,8 @@
 package com.example.gobblet_game_playing;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+
 public class Game {
 
     private Board board;
@@ -9,9 +12,22 @@ public class Game {
     static long turnStartTime =0 ;
     static long turnTimeLimitMillis = 10000;
 
-    private Turn currentTurn;
+    public Turn currentTurn;
     private GobbletColor[] gobbletColors = GobbletColor.values();
 
+    private static ObjectProperty<Turn> currentTurnProperty = new SimpleObjectProperty<>(Turn.A);
+
+    public static Turn currentTurn() {
+        return currentTurnProperty.get();
+    }
+
+    public static void setCurrentTurn(Turn turn) {
+        currentTurnProperty.set(turn);
+    }
+
+    public static ObjectProperty<Turn> currentTurnProperty() {
+        return currentTurnProperty;
+    }
 
     public enum Turn{
         A,

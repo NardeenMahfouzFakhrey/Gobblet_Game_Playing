@@ -37,7 +37,7 @@ public class BoardGUI {
 
     static VBox blackBox;
     static VBox whiteBox;
-    static HBox hbox=new HBox();
+    static HBox hbox = new HBox();
 
     static int oldX = -1;
     static int oldY = -1;
@@ -55,6 +55,7 @@ public class BoardGUI {
     static Button drawPlayer2;
     static boolean drawFlag1 = false;
     static boolean drawFlag2 = false;
+
     public static void DrawBoard(Stage stage) {
         int h = 0;
         drawFlag1 = false;
@@ -75,9 +76,9 @@ public class BoardGUI {
         HBox hboxNav = new HBox();
 
         timer = new CountdownTimer(30);
-        if(type1 == Game.PlayerType.HUMAN || type2 == Game.PlayerType.HUMAN) {
-                hboxNav.setAlignment(Pos.CENTER);
-                if(type1 == Game.PlayerType.HUMAN){
+        if (type1 == Game.PlayerType.HUMAN || type2 == Game.PlayerType.HUMAN) {
+            hboxNav.setAlignment(Pos.CENTER);
+            if (type1 == Game.PlayerType.HUMAN) {
                 drawPlayer1 = new Button("Draw");
                 drawPlayer1.setBackground(Background.fill(Color.RED));
                 hboxNav.getChildren().add(drawPlayer1);
@@ -87,16 +88,16 @@ public class BoardGUI {
             hboxNav.getChildren().add(timer);
             HBox.setHgrow(timer, Priority.ALWAYS);
             timer.setAlignment(Pos.TOP_CENTER);
-            if(type2 == Game.PlayerType.HUMAN){
+            if (type2 == Game.PlayerType.HUMAN) {
                 drawPlayer2 = new Button("Draw");
                 drawPlayer2.setBackground(Background.fill(Color.RED));
                 hboxNav.getChildren().add(drawPlayer2);
                 HBox.setHgrow(drawPlayer2, Priority.NEVER);
                 HBox.setMargin(drawPlayer2, new Insets(0, 0, 0, 5));
-            }else
+            } else
                 HBox.setMargin(timer, new Insets(0, 45, 0, 0));
             h = 35;
-            hboxNav.setPadding(new Insets(0,5,0,5));
+            hboxNav.setPadding(new Insets(0, 5, 0, 5));
             //hboxNav.setSpacing(275);
             imgVbox.getChildren().addAll(hboxNav);
             Timeline checkCountdownTimeline = new Timeline(
@@ -105,11 +106,11 @@ public class BoardGUI {
                             System.out.println("Countdown is done!");
                             showAlert();
                             game.switchTurn();
-                            if(type1 == Game.PlayerType.COMPUTER){
+                            game.setCurrentTurn(game.getCurrentTurn());
+                            if (type1 == Game.PlayerType.COMPUTER) {
                                 GameMove gameMove = BoardGUI.game.getComputerMove();
                                 BoardGUI.computerBlackTurn(gameMove);
-                            }
-                            else if(type2 == Game.PlayerType.COMPUTER){
+                            } else if (type2 == Game.PlayerType.COMPUTER) {
                                 GameMove gameMove = BoardGUI.game.getComputerMove();
                                 BoardGUI.computerWhiteTurn(gameMove);
                             }
@@ -126,14 +127,14 @@ public class BoardGUI {
         pane.getChildren().add(buttonPane);
 
         /*draw Gobblet on the right and left of the baord */
-        DrawBlackGobblets();
-        DrawWhiteGobblets();
+        DrawGobblets();
+
         setTransparent();
 
 
         hbox = new HBox(blackBox, imgVbox, whiteBox);
         // Create a Scene
-        Scene scene = new Scene(hbox, 1150, 600+h);
+        Scene scene = new Scene(hbox, 1150, 600 + h);
         // Set the Scene for the Stage
         stage.setScene(scene);
         // Set the title of the Stage
@@ -143,17 +144,17 @@ public class BoardGUI {
         stage.show();
     }
 
-    public static void setDrawPlayer1(){
+    public static void setDrawPlayer1() {
         drawPlayer1.setOnAction(event -> {
-            if(game.getCurrentTurn() == Game.Turn.A ){
-                if(drawFlag1){
+            if (game.getCurrentTurn() == Game.Turn.A) {
+                if (drawFlag1) {
                     drawPlayer1.setBackground(Background.fill(Color.RED));
                     drawFlag1 = false;
-                }else {
+                } else {
                     drawPlayer1.setBackground(Background.fill(Color.GREEN));
                     drawFlag1 = true;
                 }
-                if(drawFlag1 && drawFlag2 || (type2 == Game.PlayerType.COMPUTER && drawFlag1) ){
+                if (drawFlag1 && drawFlag2 || (type2 == Game.PlayerType.COMPUTER && drawFlag1)) {
                     drawFlag1 = false;
                     drawFlag2 = false;
                     showDrawAlert();
@@ -164,17 +165,18 @@ public class BoardGUI {
             }
         });
     }
-    public static void setDrawPlayer2(){
+
+    public static void setDrawPlayer2() {
         drawPlayer2.setOnAction(event -> {
-            if(game.getCurrentTurn() == Game.Turn.B ){
-                if(drawFlag2){
+            if (game.getCurrentTurn() == Game.Turn.B) {
+                if (drawFlag2) {
                     drawPlayer2.setBackground(Background.fill(Color.RED));
                     drawFlag2 = false;
-                }else {
+                } else {
                     drawPlayer2.setBackground(Background.fill(Color.GREEN));
                     drawFlag2 = true;
                 }
-                if(drawFlag1 && drawFlag2){
+                if (drawFlag1 && drawFlag2) {
                     drawFlag1 = false;
                     drawFlag2 = false;
                     showDrawAlert();
@@ -213,7 +215,7 @@ public class BoardGUI {
         return buttonPane;
     }
 
-    public static void DrawBlackGobblets() {
+    public static void DrawGobblets() {
         blackBox = new VBox();
         Label label = new Label(player1_name);
         label.setAlignment(Pos.TOP_CENTER);
@@ -234,13 +236,11 @@ public class BoardGUI {
 
         blackBox.setAlignment(Pos.TOP_CENTER);
         blackBox.setSpacing(25);
-    }
 
-    public static void DrawWhiteGobblets() {
         whiteBox = new VBox();
-        Label label = new Label(player2_name);
-        label.setAlignment(Pos.TOP_CENTER);
-        label.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
+        Label label1 = new Label(player2_name);
+        label1.setAlignment(Pos.TOP_CENTER);
+        label1.setStyle("-fx-font-weight: bold; -fx-font-size: 20;");
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 4; j++) {
@@ -253,9 +253,9 @@ public class BoardGUI {
         whiteBox.setPrefWidth(200);
         whiteBox.setStyle("-fx-border-color: black; -fx-border-width: 1 0 0 1;");
 
-        whiteBox.getChildren().add(label);
+        whiteBox.getChildren().add(label1);
 
-        whiteBox.setMargin(label, new Insets(10, 0, 65, 0));
+        whiteBox.setMargin(label1, new Insets(10, 0, 65, 0));
         whiteBox.getChildren().addAll(whiteImages[0][3], whiteImages[1][3], whiteImages[2][3]);
 
         restartButton.setAlignment(Pos.BOTTOM_CENTER);
@@ -264,7 +264,31 @@ public class BoardGUI {
 
         whiteBox.setAlignment(Pos.TOP_CENTER);
         whiteBox.setSpacing(25);
-    }
+        whiteBox.setBackground(Background.fill(Color.LIGHTGRAY));  // Use a light gray color for shading
+        whiteBox.setOpacity(0.7);
+
+        game.currentTurnProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("Turn changed to: " + newValue);
+
+            if (newValue == Game.Turn.A) {
+
+
+                blackBox.setBackground(Background.fill(Color.WHITE));
+                blackBox.setOpacity(1.0);
+
+                whiteBox.setBackground(Background.fill(Color.LIGHTGRAY));  // Use a light gray color for shading
+                whiteBox.setOpacity(0.7);
+
+            } else {
+                whiteBox.setBackground(Background.fill(Color.WHITE));
+                whiteBox.setOpacity(1.0);
+
+                blackBox.setBackground(Background.fill(Color.LIGHTGRAY));  // Use a light gray color for shading
+                blackBox.setOpacity(0.7);
+            }
+
+    });
+}
 
     public static void replaceButton(VBox vbox, ImageView imageView, ImageView imageView1) {
         // Get the index of the oldButton in the VBox's children
@@ -333,6 +357,7 @@ public class BoardGUI {
 //            buttonPanes[gameMove.getX()][gameMove.getY()].getChildren().add(whiteImages[0][gameMove.getGobblet().getGobbletSize().ordinal()]);
             }
             game.switchTurn();
+            game.setCurrentTurn(game.getCurrentTurn());
             timer.restartTimer(30);
 //        });
 //        initialDelay.play();
@@ -375,6 +400,7 @@ public class BoardGUI {
 //            buttonPanes[gameMove.getX()][gameMove.getY()].getChildren().add(blackImages[0][gameMove.getGobblet().getGobbletSize().ordinal()]);
             }
             game.switchTurn();
+           game.setCurrentTurn(game.getCurrentTurn());
             timer.restartTimer(30);
 //        });
 //        initialDelay.play(); }
@@ -510,4 +536,5 @@ public class BoardGUI {
             }
         }
     }
+
 }

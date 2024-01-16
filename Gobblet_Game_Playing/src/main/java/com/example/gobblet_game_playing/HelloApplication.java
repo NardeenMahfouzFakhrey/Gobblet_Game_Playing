@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import java.util.Scanner;
+import static com.example.gobblet_game_playing.Game.currentTurnProperty;
 
 public class HelloApplication extends Application {
 
@@ -13,6 +14,7 @@ public class HelloApplication extends Application {
     public void start(Stage primaryStage) {
         startStage = primaryStage;
         StartGameGUI.GameStart(startStage);
+
     }
     public static void openPrimaryStage() {
         primaryStage = new Stage();
@@ -68,6 +70,9 @@ public class HelloApplication extends Application {
         if(type2== Game.PlayerType.COMPUTER && type1== Game.PlayerType.COMPUTER) {
             BoardGUI.computerVsComputer();
         }
+
+
+
     }
 
     public static void main(String[] args) {
