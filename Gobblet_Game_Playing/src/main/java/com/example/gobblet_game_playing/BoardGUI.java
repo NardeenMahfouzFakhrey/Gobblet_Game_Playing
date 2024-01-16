@@ -125,6 +125,16 @@ public class BoardGUI {
                                 GameMove gameMove = BoardGUI.game.getComputerMove();
                                 BoardGUI.computerWhiteTurn(gameMove);
                             }
+                            if (BoardGUI.game.isGameEnded()) {
+                                PauseTransition pause = new PauseTransition(Duration.seconds(1));
+                                pause.setOnFinished(ev2 -> {
+                                    Platform.runLater(() -> {
+                                        System.out.println("Delay finished");
+                                        BoardGUI.displayWinnerMessage(BoardGUI.game.getWinner());
+                                    });
+                                });
+                                pause.play();
+                            }
                             timer.restartTimer(30); // Restart the timer if needed
                         }
                     })
