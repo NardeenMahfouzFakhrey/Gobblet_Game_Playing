@@ -127,7 +127,7 @@ public class BoardControllerGUI {
             HelloApplication.startStage.close();
             HelloApplication.primaryStage.close();
             BoardGUI.RestartGame =true;
-            BoardGUI.timer.restartTimer(30);
+            BoardGUI.timer.stopTimer();
             StartGameGUI.GameStart(HelloApplication.startStage);
         });
     }

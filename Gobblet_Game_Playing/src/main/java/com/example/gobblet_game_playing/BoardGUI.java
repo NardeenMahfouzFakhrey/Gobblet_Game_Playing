@@ -482,6 +482,11 @@ public class BoardGUI {
     public static void computerVsComputer() {
         BoardGUI.RestartGame=false;
         Thread computerVsComputerThread = new Thread(() -> {
+            try {
+                Thread.sleep(1500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             while (!game.isGameEnded() && !RestartGame) {
 
                 GameMove gameMove = game.getComputerMove();
