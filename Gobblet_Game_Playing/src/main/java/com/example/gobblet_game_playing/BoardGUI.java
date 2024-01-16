@@ -169,59 +169,63 @@ public class BoardGUI {
     }
 
     public static void setDrawPlayer1() {
-        drawPlayer1.setOnAction(event -> {
-
-            if (game.getCurrentTurn() == Game.Turn.A) {
-                if (drawFlag1) {
-                    drawFlag1 = false;
-
-                    drawPlayer1.setStyle("-fx-background-color: #8B0000; -fx-text-fill: white;"); // Darker red
-                    setSymbol(drawPlayer1, "✘");
-
-                } else {
-                    drawFlag1 = true;
-
-                    drawPlayer1.setStyle("-fx-background-color: #2E8B57; -fx-text-fill: white;"); // Darker green
-                    setSymbol(drawPlayer1, "✔");
-                }
-                if (drawFlag1 && drawFlag2 || (type2 == Game.PlayerType.COMPUTER && drawFlag1)) {
-                    drawFlag1 = false;
-                    drawFlag2 = false;
-                    showDrawAlert();
-                    HelloApplication.startStage.close();
-                    HelloApplication.primaryStage.close();
-                    StartGameGUI.GameStart(HelloApplication.startStage);
-                }
-            }
-        });
+        setDrawPlayer(drawPlayer1, Game.Turn.A,1);
     }
 
     public static void setDrawPlayer2() {
-        drawPlayer2.setOnAction(event -> {
-            if (game.getCurrentTurn() == Game.Turn.B) {
+        setDrawPlayer(drawPlayer2, Game.Turn.B,2);
+    }
+
+
+    private static void setDrawPlayer(Button drawButton,  Game.Turn turn,int player) {
+        drawButton.setOnAction(event -> {
+            if (game.getCurrentTurn() == turn && player == 1) {
+                if (drawFlag1) {
+                    drawFlag1 = false;
+                } else {
+                    drawFlag1 = true;
+                }
+                setDrawButtonStyle(drawButton, drawFlag1);
+            }
+            if (game.getCurrentTurn() == turn && player == 2) {
                 if (drawFlag2) {
                     drawFlag2 = false;
-
-                    drawPlayer2.setStyle("-fx-background-color: #8B0000; -fx-text-fill: white;"); // Darker red
-                    setSymbol(drawPlayer2, "✘");
-
                 } else {
                     drawFlag2 = true;
+                }
 
-                    drawPlayer2.setStyle("-fx-background-color: #2E8B57; -fx-text-fill: white;"); // Darker green
-                    setSymbol(drawPlayer2, "✔");
-                }
-                if (drawFlag1 && drawFlag2) {
-                    drawFlag1 = false;
-                    drawFlag2 = false;
-                    showDrawAlert();
-                    HelloApplication.startStage.close();
-                    HelloApplication.primaryStage.close();
-                    StartGameGUI.GameStart(HelloApplication.startStage);
-                }
+                setDrawButtonStyle(drawButton, drawFlag2);
             }
+            checkAndHandleDrawConditions();
+
         });
     }
+
+
+
+    private static void setDrawButtonStyle(Button drawButton, boolean drawFlag) {
+        String backgroundColor = drawFlag ? "#2E8B57" : "#8B0000"; // Darker green or red
+        drawButton.setStyle("-fx-background-color: " + backgroundColor + "; -fx-text-fill: white;");
+        String symbol = drawFlag ? "✔" : "✘";
+        setSymbol(drawButton, symbol);
+    }
+
+    private static void checkAndHandleDrawConditions() {
+        if ((drawFlag1 && drawFlag2) || (type2 == Game.PlayerType.COMPUTER && drawFlag1)) {
+            drawFlag1 = false;
+            drawFlag2 = false;
+            showDrawAlert();
+            closeStagesAndRestartGame();
+        }
+    }
+
+    private static void closeStagesAndRestartGame() {
+        HelloApplication.startStage.close();
+        HelloApplication.primaryStage.close();
+        StartGameGUI.GameStart(HelloApplication.startStage);
+    }
+
+
     public static Pane placeButtons() {
 
         for (int i = 0; i < 4; i++) {
