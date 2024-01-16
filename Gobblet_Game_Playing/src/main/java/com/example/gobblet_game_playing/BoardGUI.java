@@ -16,6 +16,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
@@ -125,16 +126,23 @@ public class BoardGUI {
         /*place buttons on the Gobblet baord*/
         Pane buttonPane = placeButtons();
         pane.getChildren().add(buttonPane);
-
         /*draw Gobblet on the right and left of the baord */
         DrawGobblets();
 
         setTransparent();
 
+        StackPane pane2 = new StackPane();
+        pane2.setBackground(Background.fill(Color.WHITE));
+        imgVbox.getChildren().add(pane2);
+        pane2.getChildren().add(restartButton);
+        pane2.setAlignment(Pos.CENTER);
+        restartButton.setPrefWidth(100);
+        restartButton.setFont(new Font(12));
+
 
         hbox = new HBox(blackBox, imgVbox, whiteBox);
         // Create a Scene
-        Scene scene = new Scene(hbox, 1150, 600 + h);
+        Scene scene = new Scene(hbox, 1150, 630 + h);
         // Set the Scene for the Stage
         stage.setScene(scene);
         // Set the title of the Stage
@@ -257,10 +265,6 @@ public class BoardGUI {
 
         whiteBox.setMargin(label1, new Insets(10, 0, 65, 0));
         whiteBox.getChildren().addAll(whiteImages[0][3], whiteImages[1][3], whiteImages[2][3]);
-
-        restartButton.setAlignment(Pos.BOTTOM_CENTER);
-        whiteBox.getChildren().add(restartButton);
-        whiteBox.setMargin(restartButton, new Insets(65, 0, 10, 0));
 
         whiteBox.setAlignment(Pos.TOP_CENTER);
         whiteBox.setSpacing(25);
