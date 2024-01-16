@@ -3,6 +3,8 @@ package com.example.gobblet_game_playing;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+import java.util.Scanner;
+
 public class HelloApplication extends Application {
 
     static Stage primaryStage;

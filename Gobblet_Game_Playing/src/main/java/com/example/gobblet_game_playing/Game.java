@@ -53,6 +53,19 @@ public class Game {
             System.out.println("ERROR: fail to create the players");
         }
 
+        if(t1 == PlayerType.COMPUTER && t2 == PlayerType.COMPUTER){
+            if(gameDifficulty1 == Difficulty.HARD && gameDifficulty2 == Difficulty.HARD){
+                ((ComputerPlayer) players.getPlayer1()).setSearchDepth(4);
+                ((ComputerPlayer) players.getPlayer2()).setSearchDepth(4);
+            }else if(gameDifficulty1 == Difficulty.NORMAL && gameDifficulty2 ==Difficulty.HARD){
+                ((ComputerPlayer) players.getPlayer1()).setSearchDepth(2);
+                ((ComputerPlayer) players.getPlayer2()).setSearchDepth(4);
+            }else if(gameDifficulty1 == Difficulty.HARD && gameDifficulty2 == Difficulty.NORMAL){
+                ((ComputerPlayer) players.getPlayer1()).setSearchDepth(4);
+                ((ComputerPlayer) players.getPlayer2()).setSearchDepth(2);
+            }
+        }
+
         currentTurn = Turn.A;
     }
 
