@@ -88,34 +88,29 @@ public class BoardControllerGUI {
                         BoardGUI.game.setCurrentTurn(BoardGUI.game.getCurrentTurn());
                         event.consume();
                         if (BoardGUI.type2 == Game.PlayerType.COMPUTER) {
-                            PauseTransition initialDelay1 = new PauseTransition(Duration.millis(10)); //  seconds delay
+                            PauseTransition initialDelay1 = new PauseTransition(Duration.seconds(0.5)); //  seconds delay
                             initialDelay1.setOnFinished(m -> {
                                 GameMove gameMove = BoardGUI.game.getComputerMove();
-                                if(BoardGUI.game.isGameEnded()) {
-                                    BoardGUI.computerWhiteTurn(gameMove);
-                                }
-                                else {
                                 PauseTransition initialDelay = new PauseTransition(Duration.seconds(3)); //  seconds delay
                                 initialDelay.setOnFinished(e2 -> {
                                     BoardGUI.computerWhiteTurn(gameMove);
+                                    if (BoardGUI.game.isGameEnded()) {
+                                        dragboard.clear();
+                                        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+                                        pause.setOnFinished(ev2 -> {
+                                            Platform.runLater(() -> {
+                                                System.out.println("Delay finished");
+                                                BoardGUI.displayWinnerMessage(BoardGUI.game.getWinner());
+                                            });
+                                        });
+                                        pause.play();
+                                    }
+
                                 });
                                 initialDelay.play();
-                                }
-                                if (BoardGUI.game.isGameEnded()) {
-                                    dragboard.clear();
-                                    PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
-                                    pause.setOnFinished(ev2 -> {
-                                        Platform.runLater(() -> {
-                                            System.out.println("Delay finished");
-                                            BoardGUI.displayWinnerMessage(BoardGUI.game.getWinner());
-                                        });
-                                    });
-                                    pause.play();
-                                }
                             });
                             initialDelay1.play();
                         }
-
                     } else {
                         dragboard.clear();
                         event.setDropCompleted(false);
