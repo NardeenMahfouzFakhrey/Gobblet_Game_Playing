@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -150,7 +151,6 @@ public class StartGameGUI {
             if(player2.getText().isEmpty()){
                 players_name[1] = "Player 2";
             }
-
             HelloApplication.openPrimaryStage();
         });
 
@@ -160,6 +160,22 @@ public class StartGameGUI {
         // Clear and add the new layout
         startBox.getChildren().clear();
         startBox.getChildren().addAll(player1Box, player2Box, buttonBox);;
+        startBox.setOnKeyPressed((e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                players[0] = Game.PlayerType.HUMAN;
+                players[1] = Game.PlayerType.HUMAN;
+                difficulties[0] = null;
+                difficulties[1] = null;
+                players_name[0] = player1.getText();
+                players_name[1] = player2.getText();
+                if(player1.getText().isEmpty()){
+                    players_name[0] = "Player 1";
+                }
+                if(player2.getText().isEmpty()){
+                    players_name[1] = "Player 2";
+                }
+                HelloApplication.openPrimaryStage();
+            }}));
     }
 
     public static void playerVScomp() {
@@ -208,6 +224,19 @@ public class StartGameGUI {
         // Clear and add the new layout
         startBox.getChildren().clear();
         startBox.getChildren().addAll( HumanPlayerBox, ComputerPlayerBox, buttonBox);
+        startBox.setOnKeyPressed((e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                players[0] = Game.PlayerType.HUMAN;
+                players[1] = Game.PlayerType.COMPUTER;
+                difficulties[0] = null;
+                difficulties[1] = difficultyChoiceBox.getValue();
+                players_name[0] = HumanPlayer.getText();
+                players_name[1] = compLabel.getText();
+                if(HumanPlayer.getText().isEmpty()){
+                    players_name[0] = "Player";
+                }
+                HelloApplication.openPrimaryStage();
+            }}));
     }
 
     public static void CompVSComp() {
@@ -255,6 +284,16 @@ public class StartGameGUI {
         // Clear and add the new layout
         startBox.getChildren().clear();
         startBox.getChildren().addAll( ComputerABox, ComputerBBox, buttonBox);
+        startBox.setOnKeyPressed((e -> {
+            if (e.getCode() == KeyCode.ENTER) {
+                players[0] = Game.PlayerType.COMPUTER;
+                players[1] = Game.PlayerType.COMPUTER;
+                difficulties[0] = difficultyChoiceBoxA.getValue();
+                difficulties[1] = difficultyChoiceBoxB.getValue();
+                players_name[0] = ComputerALabel.getText();
+                players_name[1] = ComputerBLabel.getText();
+                HelloApplication.openPrimaryStage();
+            }}));
     }
 }
 
