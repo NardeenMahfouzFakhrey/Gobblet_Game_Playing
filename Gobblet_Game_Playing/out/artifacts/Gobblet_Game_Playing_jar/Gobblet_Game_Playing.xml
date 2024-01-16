@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>E:\University\Semester 9\Artificial Intelligence\Gobblet_Game_Playing\Gobblet_Game_Playing\out\artifacts\Gobblet_Game_Playing_jar\Gobblet_Game_Playing.jar</jar>
+  <outfile>E:\University\Semester 9\Artificial Intelligence\Gobblet_Game_Playing\Gobblet_Game_Playing\out\artifacts\Gobblet_Game_Playing_jar\Gobblet_Game_Playing.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl></downloadUrl>
+  <supportUrl></supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon></icon>
+  <jre>
+    <path>%JAVA_HOME%;%PATH%</path>
+    <requiresJdk>false</requiresJdk>
+    <requires64Bit>false</requires64Bit>
+    <minVersion>1.4.0</minVersion>
+    <maxVersion></maxVersion>
+  </jre>
+</launch4jConfig>
