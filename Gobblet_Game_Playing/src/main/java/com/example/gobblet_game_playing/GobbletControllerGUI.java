@@ -12,7 +12,10 @@ public class GobbletControllerGUI {
         this.game = game;
     }
 
-    public void InitUi(ImageView gobblet, String color, int i, int j) {
+    /*
+     *Function to initialize all controllers in Gobblets in stacks
+     */
+    public void initGobbletsController(ImageView gobblet, String color, int i, int j) {
 
         this.draggable = gobblet;
 

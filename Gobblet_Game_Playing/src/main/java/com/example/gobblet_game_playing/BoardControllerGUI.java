@@ -7,10 +7,12 @@ import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.util.Duration;
-import javafx.stage.Stage;
 
 public class BoardControllerGUI {
 
+    /*
+     * Function to add controllers in board GUI
+     */
     public static void buttonsController() {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -18,6 +20,7 @@ public class BoardControllerGUI {
                 int finalI = i;
                 int finalJ = j;
 
+                // case of Gobblet is dragged from board
                 BoardGUI.buttonPanes[i][j].setOnDragOver(event -> {
                     BoardGUI.moveState = false;
                     if (event.getGestureSource() != BoardGUI.buttonPanes[finalI][finalJ] && event.getDragboard().hasImage()) {
@@ -26,6 +29,7 @@ public class BoardControllerGUI {
                     event.consume();
                 });
 
+                // case of Gobblet is dropped on the board
                 BoardGUI.buttonPanes[i][j].setOnDragDropped(event -> {
 
                     Dragboard dragboard = event.getDragboard();
@@ -35,13 +39,13 @@ public class BoardControllerGUI {
 
                     if (BoardGUI.game.setCurrentGameMove(BoardGUI.oldX, BoardGUI.oldY, BoardGUI.newX, BoardGUI.newY, BoardGUI.stack)) {
                         if (dragboard.hasImage()) {
-//                                buttonPanes[finalI][finalJ].getChildren().remove(imageView);
+
                             ImageView imageView = new ImageView();
                             imageView.setImage(dragboard.getImage());
                             BoardGUI.buttonPanes[finalI][finalJ].getChildren().add(imageView);
                             ClipboardContent content = new ClipboardContent();
                             imageView.setOnDragDetected(Detectedevent -> {
-                                System.out.println("Image Drag Detected");
+
                                 Dragboard dragboard2 = imageView.startDragAndDrop(TransferMode.COPY);
                                 content.putImage(imageView.getImage());
                                 dragboard2.setContent(content);
@@ -52,26 +56,26 @@ public class BoardControllerGUI {
                                 BoardGUI.stack = -1;
                             });
 
-                            // Add DRAG_DONE event handler
+                            // case of Gobblet is dropped done on the board
                             imageView.setOnDragDone(doneEvent -> {
-                                System.out.println("Image Drag Done");
+
                                 if (BoardGUI.moveState == false) {
                                     imageView.setImage(content.getImage());
                                 }
                             });
 
-                            System.out.println("Photo dropped on the button! " + "i = " + finalI + " j = " + finalJ);
+
                             success = true;
                             if ((BoardGUI.oldX == BoardGUI.newX) && (BoardGUI.oldY == BoardGUI.newY)) {
 
                             } else {
-                                //Game.testGUI(oldX, oldY, newX, newY, stack);
+
                                 if (BoardGUI.game.isGameEnded()) {
                                     dragboard.clear();
                                     PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
                                     pause.setOnFinished(ev1 -> {
                                         Platform.runLater(() -> {
-                                            System.out.println("Delay finished");
+
                                             BoardGUI.displayWinnerMessage(BoardGUI.game.getWinner());
                                         });
                                     });
@@ -87,11 +91,13 @@ public class BoardControllerGUI {
                         BoardGUI.game.switchTurn();
                         BoardGUI.game.setCurrentTurn(BoardGUI.game.getCurrentTurn());
                         event.consume();
+
+                        //handle computer turn
                         if (BoardGUI.type2 == Game.PlayerType.COMPUTER) {
-                            PauseTransition initialDelay1 = new PauseTransition(Duration.seconds(0.5)); //  seconds delay
+                            PauseTransition initialDelay1 = new PauseTransition(Duration.seconds(0.5));
                             initialDelay1.setOnFinished(m -> {
                                 GameMove gameMove = BoardGUI.game.getComputerMove();
-                                PauseTransition initialDelay = new PauseTransition(Duration.seconds(3)); //  seconds delay
+                                PauseTransition initialDelay = new PauseTransition(Duration.seconds(3));
                                 initialDelay.setOnFinished(e2 -> {
                                     BoardGUI.computerWhiteTurn(gameMove);
                                     if (BoardGUI.game.isGameEnded()) {
@@ -99,7 +105,7 @@ public class BoardControllerGUI {
                                         PauseTransition pause = new PauseTransition(Duration.seconds(1));
                                         pause.setOnFinished(ev2 -> {
                                             Platform.runLater(() -> {
-                                                System.out.println("Delay finished");
+
                                                 BoardGUI.displayWinnerMessage(BoardGUI.game.getWinner());
                                             });
                                         });
@@ -121,14 +127,14 @@ public class BoardControllerGUI {
             }
         }
     }
-
+    /*to handle restart of the game by restart button */
     public static void restartHandler(){
         BoardGUI.restartButton.setOnAction(event -> {
-            HelloApplication.startStage.close();
-            HelloApplication.primaryStage.close();
+            GameGobbletApplication.startStage.close();
+            GameGobbletApplication.primaryStage.close();
             BoardGUI.RestartGame =true;
             BoardGUI.timer.stopTimer();
-            StartGameGUI.GameStart(HelloApplication.startStage);
+            StartGameGUI.GameStart(GameGobbletApplication.startStage);
         });
     }
 }

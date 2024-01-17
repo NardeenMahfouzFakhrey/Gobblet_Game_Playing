@@ -61,7 +61,7 @@
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>
-                                com.example.gobblet_game_playing/com.example.gobblet_game_playing.HelloApplication
+                                com.example.gobblet_game_playing/com.example.gobblet_game_playing.GameGobbletApplication
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>

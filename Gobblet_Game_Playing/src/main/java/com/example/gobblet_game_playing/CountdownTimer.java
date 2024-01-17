@@ -5,13 +5,13 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 
 public class CountdownTimer extends VBox {
 
-    private int secondsRemaining ; // Set your desired countdown time in seconds
+    // Set your desired countdown time in seconds
+    private int secondsRemaining ;
     private Label label;
     private Timeline timeline;
     private boolean isCountdownDone = false;

@@ -11,10 +11,6 @@ public class GobbletImage {
     private final int number;
     private int squarePos;
 
-    public GobbletImage(String color, int number) {
-        this(color, number, false);
-    }
-
     public GobbletImage(String color, int number, boolean addImageView) {
         this.color = color;
         this.number = number;
@@ -25,30 +21,12 @@ public class GobbletImage {
     }
 
     private void loadImageView() {
-        gobbletImageView = new ImageView(new Image(BoardGUI.class.getResource(String.format(IMAGES_GOBBLETS, color, number)).toExternalForm()));
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    public int getNumber() {
-        return number;
-    }
-
-    public void setImage(ImageView VGobbletImageView) {
-        this.gobbletImageView = VGobbletImageView;
+        gobbletImageView = new ImageView(new Image(BoardGUI.class.getResource(String.format(IMAGES_GOBBLETS, color, number))
+                .toExternalForm()));
     }
 
     public ImageView getImgView() {
         return gobbletImageView;
     }
 
-    public int getSquarePos() {
-        return squarePos;
-    }
-
-    public void setSquarePos(int squarePos) {
-        this.squarePos = squarePos;
-    }
 }

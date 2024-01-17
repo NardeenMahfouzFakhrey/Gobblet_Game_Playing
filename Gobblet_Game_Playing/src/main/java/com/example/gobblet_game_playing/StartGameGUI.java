@@ -113,9 +113,6 @@ public class StartGameGUI {
     }
 
     public static void playerVSplayer() {
-//        Label Title = new Label("Enter players name");
-//        Title.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-//        Title.setAlignment(Pos.CENTER);
 
         Label player1Label = new Label("Player 1");
         player1Label.setFont(Font.font("Arial", FontWeight.BOLD, 14));
@@ -151,7 +148,7 @@ public class StartGameGUI {
             if(player2.getText().isEmpty()){
                 players_name[1] = "Player 2";
             }
-            HelloApplication.openPrimaryStage();
+            openPrimaryStage();
         });
 
         buttonBox.getChildren().addAll(previousButton, nextButton);
@@ -174,14 +171,11 @@ public class StartGameGUI {
                 if(player2.getText().isEmpty()){
                     players_name[1] = "Player 2";
                 }
-                HelloApplication.openPrimaryStage();
+                openPrimaryStage();
             }}));
     }
 
     public static void playerVScomp() {
-//        Label Title = new Label("Enter player name and Computer difficulty level");
-//        Title.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-//        Title.setAlignment(Pos.CENTER);
 
         Label HumanPlayerLabel = new Label("Player");
         HumanPlayerLabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
@@ -214,7 +208,7 @@ public class StartGameGUI {
             if(HumanPlayer.getText().isEmpty()){
                 players_name[0] = "Player";
             }
-            HelloApplication.openPrimaryStage();
+            openPrimaryStage();
         });
 
 
@@ -235,15 +229,11 @@ public class StartGameGUI {
                 if(HumanPlayer.getText().isEmpty()){
                     players_name[0] = "Player";
                 }
-                HelloApplication.openPrimaryStage();
+                openPrimaryStage();
             }}));
     }
 
     public static void CompVSComp() {
-//        Label Title = new Label("Choose difficulty level for each Computer");
-//        Title.setFont(Font.font("Arial", FontWeight.BOLD, 14));
-//        Title.setAlignment(Pos.CENTER);
-
         Label ComputerALabel = new Label("Computer A");
         ComputerALabel.setFont(Font.font("Arial", FontWeight.BOLD, 14));
         ChoiceBox<Game.Difficulty> difficultyChoiceBoxA = new ChoiceBox<>();
@@ -274,7 +264,7 @@ public class StartGameGUI {
             difficulties[1] = difficultyChoiceBoxB.getValue();
             players_name[0] = ComputerALabel.getText();
             players_name[1] = ComputerBLabel.getText();
-            HelloApplication.openPrimaryStage();
+            openPrimaryStage();
         });
 
 
@@ -292,8 +282,64 @@ public class StartGameGUI {
                 difficulties[1] = difficultyChoiceBoxB.getValue();
                 players_name[0] = ComputerALabel.getText();
                 players_name[1] = ComputerBLabel.getText();
-                HelloApplication.openPrimaryStage();
+                openPrimaryStage();
             }}));
+    }
+
+    public static void openPrimaryStage() {
+        GameGobbletApplication.primaryStage = new Stage();
+        startStage.close();
+        resetGame();
+        GameGobbletApplication.primaryStage.show();
+
+    }
+    public static void resetGame() {
+        /*handling start Game Stage Here*/
+        Game.PlayerType type1 = StartGameGUI.getPlayers()[0];
+        Game.PlayerType type2 = StartGameGUI.getPlayers()[1];
+        String player1_name = StartGameGUI.getPlayers_name()[0];
+        String player2_name = StartGameGUI.getPlayers_name()[1];
+
+        Game.PlayerType players[] = new Game.PlayerType[2];
+        players[0] = type1;
+        players[1] = type2;
+
+        // Game game = new Game(type1, player1_name, null, type2, player2_name, null);
+        Game game = new Game(type1, player1_name, StartGameGUI.getDifficulties()[0], type2, player2_name, StartGameGUI.getDifficulties()[1]);
+
+        /*initialize game*/
+        BoardGUI.game = game;
+        BoardGUI.type1=type1;
+        BoardGUI.type2=type2;
+        BoardGUI.player1_name = player1_name;
+        BoardGUI.player2_name = player2_name;
+        GobbletControllerGUI controllerGUI = new GobbletControllerGUI(game);
+        BoardGUI.DrawBoard( GameGobbletApplication.primaryStage);
+        BoardControllerGUI.restartHandler();
+
+        if(type1 != Game.PlayerType.COMPUTER) {
+            BoardGUI.setDrawPlayer1();
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 4; j++) {
+                    controllerGUI. initGobbletsController(BoardGUI.blackImages[i][j], "B", i, j);
+                }
+            }
+            BoardControllerGUI.buttonsController();
+        }
+
+        if(type2 != Game.PlayerType.COMPUTER) {
+            BoardGUI.setDrawPlayer2();
+            for (int i = 0; i < 3; i++) {
+                for (int j = 0; j < 4; j++) {
+                    controllerGUI. initGobbletsController(BoardGUI.whiteImages[i][j], "W", i, j);
+                }
+            }
+            BoardControllerGUI.buttonsController();
+        }
+
+        if(type2== Game.PlayerType.COMPUTER && type1== Game.PlayerType.COMPUTER) {
+            BoardGUI.computerVsComputer();
+        }
     }
 }
 
