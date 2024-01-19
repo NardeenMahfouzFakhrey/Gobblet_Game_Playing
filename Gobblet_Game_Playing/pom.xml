@@ -57,21 +57,52 @@
                 <version>0.0.8</version>
                 <executions>
                     <execution>
-                        <!-- Default configuration for running with: mvn clean javafx:run -->
-                        <id>default-cli</id>
-                        <configuration>
-                            <mainClass>
-                                com.example.gobblet_game_playing/com.example.gobblet_game_playing.GameGobbletApplication
-                            </mainClass>
-                            <launcher>app</launcher>
-                            <jlinkZipName>app</jlinkZipName>
-                            <jlinkImageName>app</jlinkImageName>
-                            <noManPages>true</noManPages>
-                            <stripDebug>true</stripDebug>
-                            <noHeaderFiles>true</noHeaderFiles>
-                        </configuration>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>jlink</goal>
+                        </goals>
                     </execution>
                 </executions>
+                <configuration>
+                <mainClass>
+                    com.example.gobblet_game_playing/com.example.gobblet_game_playing.GameGobbletApplication
+                </mainClass>
+                    <compress>2</compress>
+                <launcher>app</launcher>
+                <noManPages>true</noManPages>
+                <stripDebug>true</stripDebug>
+                <noHeaderFiles>true</noHeaderFiles>
+            </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- obtain warp-packer.exe from: "https://github.com/dgiagio/warp/releases/download/v0.3.0/windows-x64.warp-packer.exe" -->
+                    <executable>${project.basedir}\tools\warp-packer.exe</executable>
+                    <arguments>
+                        <argument>--arch</argument>
+                        <argument>windows-x64</argument>
+
+                        <argument>--input_dir</argument>
+                        <argument>${project.build.directory}\image</argument>
+
+                        <argument>--exec</argument>
+                        <argument>bin\app.bat</argument>
+
+                        <argument>--output</argument>
+                        <argument>${project.build.directory}\${project.artifactId}.exe</argument>
+                    </arguments>
+                </configuration>
             </plugin>
         </plugins>
     </build>

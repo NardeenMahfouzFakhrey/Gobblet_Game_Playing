@@ -341,6 +341,7 @@ public class BoardGUI {
         if ((drawFlag1 && drawFlag2) || (type2 == Game.PlayerType.COMPUTER && drawFlag1)) {
             drawFlag1 = false;
             drawFlag2 = false;
+            timer.stopTimer();
             showDrawAlert();
             closeStagesAndRestartGame();
         }
