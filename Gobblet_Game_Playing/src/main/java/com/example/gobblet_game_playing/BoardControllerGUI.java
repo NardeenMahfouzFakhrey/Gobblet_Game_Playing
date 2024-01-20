@@ -71,6 +71,7 @@ public class BoardControllerGUI {
                             } else {
 
                                 if (BoardGUI.game.isGameEnded()) {
+                                    BoardGUI.moveState = true;
                                     dragboard.clear();
                                     PauseTransition pause = new PauseTransition(Duration.seconds(0.5));
                                     pause.setOnFinished(ev1 -> {
