@@ -50,7 +50,6 @@ public class BoardControllerGUI {
                                 content.putImage(imageView.getImage());
                                 dragboard2.setContent(content);
                                 imageView.setImage(null);
-                                BoardGUI.buttonPanes[finalI][finalJ].getChildren().remove(BoardGUI.buttonPanes[finalI][finalJ].getChildren().size()-1);
                                 Detectedevent.consume();
                                 BoardGUI.oldX = finalI;
                                 BoardGUI.oldY = finalJ;
@@ -62,6 +61,8 @@ public class BoardControllerGUI {
 
                                 if (BoardGUI.moveState == false) {
                                     imageView.setImage(content.getImage());
+                                }else {
+                                    BoardGUI.buttonPanes[BoardGUI.oldX][BoardGUI.oldY].getChildren().remove(BoardGUI.buttonPanes[BoardGUI.oldX][BoardGUI.oldY].getChildren().size()-1);
                                 }
                             });
 
