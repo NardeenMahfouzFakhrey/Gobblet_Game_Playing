@@ -475,6 +475,7 @@ public class BoardGUI {
         }
         game.switchTurn();
         game.setCurrentTurn(game.getCurrentTurn());
+        BoardControllerGUI.switchTurnHandleGobblets();
         timer.restartTimer(30);
 
 
