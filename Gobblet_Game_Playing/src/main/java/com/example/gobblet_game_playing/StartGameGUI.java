@@ -340,6 +340,7 @@ public class StartGameGUI {
         if(type2== Game.PlayerType.COMPUTER && type1== Game.PlayerType.COMPUTER) {
             BoardGUI.computerVsComputer();
         }
+        BoardGUI.game.setCurrentTurn(BoardGUI.game.getCurrentTurn());
     }
 }
 

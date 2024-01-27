@@ -124,7 +124,9 @@ public class BoardControllerGUI {
                         dragboard.clear();
                         event.setDropCompleted(false);
                         BoardGUI.moveState = false;
-                        BoardGUI.alertMessageWarning("incorrect Move");
+                        if (!(BoardGUI.oldX == BoardGUI.newX && BoardGUI.oldY == BoardGUI.newY)){
+                            BoardGUI.alertMessageWarning("incorrect Move");
+                        }
                     }
                 });
             }
