@@ -49,7 +49,7 @@ public class BoardControllerGUI {
                                 Dragboard dragboard2 = imageView.startDragAndDrop(TransferMode.COPY);
                                 content.putImage(imageView.getImage());
                                 dragboard2.setContent(content);
-                                imageView.setImage(null);
+                                
                                 Detectedevent.consume();
                                 BoardGUI.oldX = finalI;
                                 BoardGUI.oldY = finalJ;
