@@ -2,6 +2,7 @@ package com.example.gobblet_game_playing;
 
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.scene.Node;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
@@ -49,11 +50,19 @@ public class BoardControllerGUI {
                                 Dragboard dragboard2 = imageView.startDragAndDrop(TransferMode.COPY);
                                 content.putImage(imageView.getImage());
                                 dragboard2.setContent(content);
-                                
+                                imageView.setImage(null);
                                 Detectedevent.consume();
                                 BoardGUI.oldX = finalI;
                                 BoardGUI.oldY = finalJ;
                                 BoardGUI.stack = -1;
+
+                                if(BoardGUI.game.getBoard().getFront(finalI,finalJ).getGobbletColor()==GobbletColor.WHITE && BoardGUI.game.currentTurn == Game.Turn.A)
+                                {
+                                    disableOtherImageViewsExcept(finalI,finalJ);
+                                }
+                                else if (BoardGUI.game.getBoard().getFront(finalI,finalJ).getGobbletColor()==GobbletColor.BLACK && BoardGUI.game.currentTurn == Game.Turn.B) {
+                                    disableOtherImageViewsExcept(finalI,finalJ);
+                                }
                             });
 
                             // case of Gobblet is dropped done on the board
@@ -62,6 +71,7 @@ public class BoardControllerGUI {
                                 if (BoardGUI.moveState == false) {
                                     imageView.setImage(content.getImage());
                                 }else {
+                                    enableAllImageViews();
                                     BoardGUI.buttonPanes[BoardGUI.oldX][BoardGUI.oldY].getChildren().remove(BoardGUI.buttonPanes[BoardGUI.oldX][BoardGUI.oldY].getChildren().size()-1);
                                 }
                             });
@@ -125,7 +135,13 @@ public class BoardControllerGUI {
                         event.setDropCompleted(false);
                         BoardGUI.moveState = false;
                         if (!(BoardGUI.oldX == BoardGUI.newX && BoardGUI.oldY == BoardGUI.newY)){
-                            BoardGUI.alertMessageWarning("incorrect Move");
+                            if((BoardGUI.game.getBoard().getFront(BoardGUI.oldX,BoardGUI.oldY).getGobbletColor()==GobbletColor.WHITE && BoardGUI.game.currentTurn == Game.Turn.A)
+                            || (BoardGUI.game.getBoard().getFront(BoardGUI.oldX,BoardGUI.oldY).getGobbletColor()==GobbletColor.BLACK && BoardGUI.game.currentTurn == Game.Turn.B) ){
+                                BoardGUI.alertMessageWarning("Incorrect Move");
+                            }
+                            else {
+                                BoardGUI.alertMessageWarning("It's not your turn");
+                            }
                         }
                     }
                 });
@@ -141,5 +157,31 @@ public class BoardControllerGUI {
             BoardGUI.timer.stopTimer();
             StartGameGUI.GameStart(GameGobbletApplication.startStage);
         });
+    }
+
+    private static void disableOtherImageViewsExcept(int x, int y) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                Node lastChild = BoardGUI.buttonPanes[i][j].getChildren().get(BoardGUI.buttonPanes[i][j].getChildren().size() - 1);
+                if(lastChild!=null && !(i==x && j==y)){
+                    lastChild.setDisable(true);
+                    BoardGUI.blackBox.setDisable(true);
+                    BoardGUI.whiteBox.setDisable(true);
+                }
+            }
+        }
+    }
+
+    private static void enableAllImageViews() {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                Node lastChild = BoardGUI.buttonPanes[i][j].getChildren().get(BoardGUI.buttonPanes[i][j].getChildren().size() - 1);
+                if(lastChild!=null){
+                    lastChild.setDisable(false);
+                    BoardGUI.blackBox.setDisable(false);
+                    BoardGUI.whiteBox.setDisable(false);
+                }
+            }
+        }
     }
 }

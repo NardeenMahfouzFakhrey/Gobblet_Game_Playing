@@ -266,10 +266,14 @@ public class BoardGUI {
 
         game.currentTurnProperty().addListener((observable, oldValue, newValue) -> {
 
-
             if (newValue == Game.Turn.A) {
 
-
+                for(int i=0 ; i< 3 ; i++) {
+                    for(int j=0 ; j<4 ; j++) {
+                        whiteImages[i][j].setDisable(true);
+                        blackImages[i][j].setDisable(false);
+                    }
+                }
                 blackBox.setBackground(Background.fill(Color.WHITE));
                 blackBox.setOpacity(1.0);
 
@@ -277,6 +281,13 @@ public class BoardGUI {
                 whiteBox.setOpacity(0.7);
 
             } else {
+
+                for(int i=0 ; i< 3 ; i++) {
+                    for(int j=0 ; j<4 ; j++) {
+                        blackImages[i][j].setDisable(true);
+                        whiteImages[i][j].setDisable(false);
+                    }
+                }
                 whiteBox.setBackground(Background.fill(Color.WHITE));
                 whiteBox.setOpacity(1.0);
 
