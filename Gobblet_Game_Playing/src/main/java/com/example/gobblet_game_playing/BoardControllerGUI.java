@@ -127,7 +127,6 @@ public class BoardControllerGUI {
                                         });
                                         pause.play();
                                     }
-
                                 });
                                 initialDelay.play();
                             });

@@ -122,7 +122,6 @@ public class BoardGUI {
                         if (timer.isCountdownDone()) {
                             showAlert();
                             game.switchTurn();
-                            BoardControllerGUI.switchTurnHandleGobblets();
                             game.setCurrentTurn(game.getCurrentTurn());
                             if (type1 == Game.PlayerType.COMPUTER) {
                                 GameMove gameMove = BoardGUI.game.getComputerMove();
@@ -131,6 +130,7 @@ public class BoardGUI {
                                 GameMove gameMove = BoardGUI.game.getComputerMove();
                                 BoardGUI.computerWhiteTurn(gameMove);
                             }
+                            BoardControllerGUI.switchTurnHandleGobblets();
                             if (BoardGUI.game.isGameEnded()) {
                                 PauseTransition pause = new PauseTransition(Duration.seconds(1));
                                 pause.setOnFinished(ev2 -> {
@@ -143,6 +143,7 @@ public class BoardGUI {
                             }
                             // Restart the timer if needed
                             timer.restartTimer(30);
+
                         }
                     })
             );
@@ -475,10 +476,12 @@ public class BoardGUI {
         }
         game.switchTurn();
         game.setCurrentTurn(game.getCurrentTurn());
-        BoardControllerGUI.switchTurnHandleGobblets();
         timer.restartTimer(30);
-
-
+        PauseTransition GobbletDelay = new PauseTransition(Duration.millis(10));
+        GobbletDelay.setOnFinished(g -> {
+            BoardControllerGUI.switchTurnHandleGobblets();
+        });
+        GobbletDelay.play();
     }
 
     /*
