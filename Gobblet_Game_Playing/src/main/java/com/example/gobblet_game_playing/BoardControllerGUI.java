@@ -9,6 +9,8 @@ import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.util.Duration;
 
+import java.util.Base64;
+
 public class BoardControllerGUI {
 
     /*
@@ -56,12 +58,10 @@ public class BoardControllerGUI {
                                 BoardGUI.oldY = finalJ;
                                 BoardGUI.stack = -1;
 
-                                if(BoardGUI.game.getBoard().getFront(finalI,finalJ).getGobbletColor()==GobbletColor.WHITE && BoardGUI.game.currentTurn == Game.Turn.A)
-                                {
-                                    disableOtherImageViewsExcept(finalI,finalJ);
-                                }
-                                else if (BoardGUI.game.getBoard().getFront(finalI,finalJ).getGobbletColor()==GobbletColor.BLACK && BoardGUI.game.currentTurn == Game.Turn.B) {
-                                    disableOtherImageViewsExcept(finalI,finalJ);
+                                if (BoardGUI.game.getBoard().getFront(finalI, finalJ).getGobbletColor() == GobbletColor.WHITE && BoardGUI.game.currentTurn == Game.Turn.A) {
+                                    disableOtherImageViewsExcept(finalI, finalJ);
+                                } else if (BoardGUI.game.getBoard().getFront(finalI, finalJ).getGobbletColor() == GobbletColor.BLACK && BoardGUI.game.currentTurn == Game.Turn.B) {
+                                    disableOtherImageViewsExcept(finalI, finalJ);
                                 }
                             });
 
@@ -70,9 +70,10 @@ public class BoardControllerGUI {
 
                                 if (BoardGUI.moveState == false) {
                                     imageView.setImage(content.getImage());
-                                }else {
-                                    enableAllImageViews();
-                                    BoardGUI.buttonPanes[BoardGUI.oldX][BoardGUI.oldY].getChildren().remove(BoardGUI.buttonPanes[BoardGUI.oldX][BoardGUI.oldY].getChildren().size()-1);
+                                } else {
+
+
+                                    BoardGUI.buttonPanes[BoardGUI.oldX][BoardGUI.oldY].getChildren().remove(BoardGUI.buttonPanes[BoardGUI.oldX][BoardGUI.oldY].getChildren().size() - 1);
                                 }
                             });
 
@@ -102,7 +103,9 @@ public class BoardControllerGUI {
                         BoardGUI.timer.restartTimer(30);
                         event.setDropCompleted(success);
                         BoardGUI.game.switchTurn();
+                       switchTurnHandleGobblets();
                         BoardGUI.game.setCurrentTurn(BoardGUI.game.getCurrentTurn());
+
                         event.consume();
 
                         //handle computer turn
@@ -134,12 +137,11 @@ public class BoardControllerGUI {
                         dragboard.clear();
                         event.setDropCompleted(false);
                         BoardGUI.moveState = false;
-                        if (!(BoardGUI.oldX == BoardGUI.newX && BoardGUI.oldY == BoardGUI.newY)){
-                            if((BoardGUI.game.getBoard().getFront(BoardGUI.oldX,BoardGUI.oldY).getGobbletColor()==GobbletColor.WHITE && BoardGUI.game.currentTurn == Game.Turn.A)
-                            || (BoardGUI.game.getBoard().getFront(BoardGUI.oldX,BoardGUI.oldY).getGobbletColor()==GobbletColor.BLACK && BoardGUI.game.currentTurn == Game.Turn.B) ){
+                        if (!(BoardGUI.oldX == BoardGUI.newX && BoardGUI.oldY == BoardGUI.newY)) {
+                            if ((BoardGUI.game.getBoard().getFront(BoardGUI.oldX, BoardGUI.oldY).getGobbletColor() == GobbletColor.WHITE && BoardGUI.game.currentTurn == Game.Turn.A)
+                                    || (BoardGUI.game.getBoard().getFront(BoardGUI.oldX, BoardGUI.oldY).getGobbletColor() == GobbletColor.BLACK && BoardGUI.game.currentTurn == Game.Turn.B)) {
                                 BoardGUI.alertMessageWarning("Incorrect Move");
-                            }
-                            else {
+                            } else {
                                 BoardGUI.alertMessageWarning("It's not your turn");
                             }
                         }
@@ -148,12 +150,13 @@ public class BoardControllerGUI {
             }
         }
     }
+
     /*to handle restart of the game by restart button */
-    public static void restartHandler(){
+    public static void restartHandler() {
         BoardGUI.restartButton.setOnAction(event -> {
             GameGobbletApplication.startStage.close();
             GameGobbletApplication.primaryStage.close();
-            BoardGUI.RestartGame =true;
+            BoardGUI.RestartGame = true;
             BoardGUI.timer.stopTimer();
             StartGameGUI.GameStart(GameGobbletApplication.startStage);
         });
@@ -163,7 +166,7 @@ public class BoardControllerGUI {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 Node lastChild = BoardGUI.buttonPanes[i][j].getChildren().get(BoardGUI.buttonPanes[i][j].getChildren().size() - 1);
-                if(lastChild!=null && !(i==x && j==y)){
+                if (lastChild != null && !(i == x && j == y)) {
                     lastChild.setDisable(true);
                     BoardGUI.blackBox.setDisable(true);
                     BoardGUI.whiteBox.setDisable(true);
@@ -172,14 +175,42 @@ public class BoardControllerGUI {
         }
     }
 
-    private static void enableAllImageViews() {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                Node lastChild = BoardGUI.buttonPanes[i][j].getChildren().get(BoardGUI.buttonPanes[i][j].getChildren().size() - 1);
-                if(lastChild!=null){
-                    lastChild.setDisable(false);
-                    BoardGUI.blackBox.setDisable(false);
-                    BoardGUI.whiteBox.setDisable(false);
+    public static void switchTurnHandleGobblets() {
+        if (BoardGUI.game.currentTurn == Game.Turn.A) {
+            for (int x = 0; x < 4; x++) {
+                for (int y = 0; y < 4; y++) {
+                    for (int l = BoardGUI.buttonPanes[x][y].getChildren().size() - 1; l >= 0; l--) {
+                        Node lastChild = BoardGUI.buttonPanes[x][y].getChildren().get(l);
+                        if (!(BoardGUI.game.getBoard().getFront(x, y) == null) && BoardGUI.game.getBoard().getFront(x, y).getGobbletColor() == GobbletColor.BLACK) {
+                            if (lastChild != null) {
+                                lastChild.setDisable(true);
+                                BoardGUI.blackBox.setDisable(true);
+                            }
+
+                        } else {
+                            lastChild.setDisable(false);
+                            BoardGUI.blackBox.setDisable(false);
+                        }
+                    }
+                }
+            }
+        } else if (BoardGUI.game.currentTurn == Game.Turn.B) {
+            for (int x = 0; x < 4; x++) {
+                for (int y = 0; y < 4; y++) {
+
+                    for (int l = BoardGUI.buttonPanes[x][y].getChildren().size() - 1; l >= 0; l--) {
+                        Node lastChild = BoardGUI.buttonPanes[x][y].getChildren().get(l);
+                        if (!(BoardGUI.game.getBoard().getFront(x, y) == null) && BoardGUI.game.getBoard().getFront(x, y).getGobbletColor() == GobbletColor.WHITE) {
+                            if (lastChild != null) {
+                                lastChild.setDisable(true);
+                                BoardGUI.whiteBox.setDisable(true);
+                            }
+
+                        } else {
+                            BoardGUI.whiteBox.setDisable(false);
+                            lastChild.setDisable(false);
+                        }
+                    }
                 }
             }
         }

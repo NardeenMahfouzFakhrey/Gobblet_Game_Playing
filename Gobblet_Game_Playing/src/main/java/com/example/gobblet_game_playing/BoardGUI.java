@@ -122,6 +122,7 @@ public class BoardGUI {
                         if (timer.isCountdownDone()) {
                             showAlert();
                             game.switchTurn();
+                            BoardControllerGUI.switchTurnHandleGobblets();
                             game.setCurrentTurn(game.getCurrentTurn());
                             if (type1 == Game.PlayerType.COMPUTER) {
                                 GameMove gameMove = BoardGUI.game.getComputerMove();
