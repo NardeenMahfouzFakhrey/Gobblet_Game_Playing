@@ -48,7 +48,6 @@ public class Board {
                     Gobblet gobblet = new Gobblet(board.getBoard()[i][j].elementAt(z));
                     this.board[i][j].push(gobblet);
                 }
-//                this.board[i][j].addAll(board.getBoard()[i][j]);
             }
         }
         this.playersGobblets = new Stack[2][3];
@@ -72,99 +71,6 @@ public class Board {
         this.isCriticalState = false;
 
     }
-
-
-//    public GobbletColor isWinningState(GobbletColor gobbletColor) {
-//        if (checkWinner(BLACK) == BLACK && checkWinner(WHITE) == WHITE) {
-//            switch (gobbletColor) {
-//                case WHITE:
-//                    return BLACK;
-//                case BLACK:
-//                    return WHITE;
-//                default:
-//                    return null;
-//            }
-//        }
-//        GobbletColor winnerColor = checkWinner(gobbletColor);
-//        if (winnerColor != null) {
-//            return winnerColor;
-//        }
-//
-//        return null;
-//    }
-//
-//
-//    /**
-//     * to check for passed color if winner by completing a row, a column or a diagonal
-//     * @param gobbletColor
-//     * @return
-//     */
-//    private GobbletColor checkWinner(GobbletColor gobbletColor) {
-//        /* rows checking */
-//        GobbletColor winningColor = null;
-//
-//        for (int row = 0; row < 4; row++) {
-//            winningColor = checkLine(row, 0, row, 3);
-//            if (winningColor != null && winningColor == gobbletColor) {
-//                return winningColor;
-//            }
-//        }
-//
-//        /* columns checking */
-//        for (int col = 0; col < 4; col++) {
-//            winningColor = checkLine(0, col, 3, col);
-//            if (winningColor != null && winningColor == gobbletColor) {
-//                return winningColor;
-//            }
-//        }
-//
-//        /*  2 diagonals checking */
-//        winningColor = checkLine(0, 0, 3, 3);
-//        if (winningColor != null && winningColor == gobbletColor) {
-//            return winningColor;
-//        }
-//
-//        winningColor = checkLine(0, 3, 3, 0);
-//        if (winningColor != null && winningColor == gobbletColor) {
-//            return winningColor;
-//        }
-//
-//        return null;
-//    }
-//
-//    /**
-//     * Helper method to check if there is a line of four gobblets with the same color
-//     *
-//     * @param startX
-//     * @param startY
-//     * @param endX
-//     * @param endY
-//     * @return GobbletColor
-//     */
-//    private GobbletColor checkLine(int startX, int startY, int endX, int endY) {
-//        Gobblet firstGobblet = getFront(startX, startY);
-//
-//        if (firstGobblet == null) {
-//            return null;
-//        }
-//
-//        Gobblet currentGobblet = null;
-//        for (int i = startX; i <= endX; i++) {
-//            for (int j = startY; j <= endY; j++) {
-//                currentGobblet = getFront(i, j);
-//                if (currentGobblet == null || (currentGobblet.getGobbletColor() != firstGobblet.getGobbletColor())) {
-//                    return null;
-//                }
-//            }
-//        }
-//        if (currentGobblet == null || (currentGobblet.getGobbletColor() != firstGobblet.getGobbletColor())) {
-//            return null;
-//        }
-//
-//        return firstGobblet.getGobbletColor();
-//    }
-//
-
 
     GobbletColor isWinningState(GobbletColor myGobbletColor){
         GobbletColor opponentGobbletColor = (myGobbletColor == WHITE)? BLACK:WHITE;
