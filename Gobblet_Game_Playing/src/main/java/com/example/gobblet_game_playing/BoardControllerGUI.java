@@ -59,20 +59,19 @@ public class BoardControllerGUI {
                                 BoardGUI.stack = -1;
 
                                 if (BoardGUI.game.getBoard().getFront(finalI, finalJ).getGobbletColor() == GobbletColor.WHITE && BoardGUI.game.currentTurn == Game.Turn.A) {
+                                    switchTurnHandleGobblets();
                                     disableOtherImageViewsExcept(finalI, finalJ);
                                 } else if (BoardGUI.game.getBoard().getFront(finalI, finalJ).getGobbletColor() == GobbletColor.BLACK && BoardGUI.game.currentTurn == Game.Turn.B) {
+                                    switchTurnHandleGobblets();
                                     disableOtherImageViewsExcept(finalI, finalJ);
                                 }
                             });
 
                             // case of Gobblet is dropped done on the board
                             imageView.setOnDragDone(doneEvent -> {
-
                                 if (BoardGUI.moveState == false) {
                                     imageView.setImage(content.getImage());
                                 } else {
-
-
                                     BoardGUI.buttonPanes[BoardGUI.oldX][BoardGUI.oldY].getChildren().remove(BoardGUI.buttonPanes[BoardGUI.oldX][BoardGUI.oldY].getChildren().size() - 1);
                                 }
                             });
@@ -133,12 +132,12 @@ public class BoardControllerGUI {
                             initialDelay1.play();
                         }
                     } else {
+                        BoardGUI.moveState = false;
                         dragboard.clear();
                         event.setDropCompleted(false);
-                        BoardGUI.moveState = false;
                         if (!(BoardGUI.oldX == BoardGUI.newX && BoardGUI.oldY == BoardGUI.newY)) {
                                 BoardGUI.alertMessageWarning("Incorrect Move");
-                            }
+                        }
                     }
                 });
             }
@@ -157,18 +156,22 @@ public class BoardControllerGUI {
     }
 
     private static void disableOtherImageViewsExcept(int x, int y) {
+        BoardGUI.blackBox.setDisable(true);
+        BoardGUI.whiteBox.setDisable(true);
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                Node lastChild = BoardGUI.buttonPanes[i][j].getChildren().get(BoardGUI.buttonPanes[i][j].getChildren().size() - 1);
-                if (lastChild != null && !(i == x && j == y)) {
-                    lastChild.setDisable(true);
-                    BoardGUI.blackBox.setDisable(true);
-                    BoardGUI.whiteBox.setDisable(true);
+                if(x==i && y==j){
+                    continue;
+                }
+                for (int l = BoardGUI.buttonPanes[i][j].getChildren().size() - 1; l >= 0; l--) {
+                    Node lastChild = BoardGUI.buttonPanes[i][j].getChildren().get(l);
+                    if (lastChild != null) {
+                        lastChild.setDisable(true);
+                    }
                 }
             }
         }
     }
-
     public static void switchTurnHandleGobblets() {
         if (BoardGUI.game.currentTurn == Game.Turn.A) {
             BoardGUI.whiteBox.setDisable(true);
@@ -192,17 +195,13 @@ public class BoardControllerGUI {
             BoardGUI.blackBox.setDisable(true);
             for (int x = 0; x < 4; x++) {
                 for (int y = 0; y < 4; y++) {
-
                     for (int l = BoardGUI.buttonPanes[x][y].getChildren().size() - 1; l >= 0; l--) {
                         Node lastChild = BoardGUI.buttonPanes[x][y].getChildren().get(l);
                         if (!(BoardGUI.game.getBoard().getFront(x, y) == null) && BoardGUI.game.getBoard().getFront(x, y).getGobbletColor() == GobbletColor.WHITE) {
                             if (lastChild != null) {
                                 lastChild.setDisable(true);
-
                             }
-
                         } else {
-
                             lastChild.setDisable(false);
                         }
                     }
