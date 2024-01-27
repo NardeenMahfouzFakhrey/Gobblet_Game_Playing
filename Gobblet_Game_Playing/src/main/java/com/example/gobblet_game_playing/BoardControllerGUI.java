@@ -138,13 +138,8 @@ public class BoardControllerGUI {
                         event.setDropCompleted(false);
                         BoardGUI.moveState = false;
                         if (!(BoardGUI.oldX == BoardGUI.newX && BoardGUI.oldY == BoardGUI.newY)) {
-                            if ((BoardGUI.game.getBoard().getFront(BoardGUI.oldX, BoardGUI.oldY).getGobbletColor() == GobbletColor.WHITE && BoardGUI.game.currentTurn == Game.Turn.A)
-                                    || (BoardGUI.game.getBoard().getFront(BoardGUI.oldX, BoardGUI.oldY).getGobbletColor() == GobbletColor.BLACK && BoardGUI.game.currentTurn == Game.Turn.B)) {
                                 BoardGUI.alertMessageWarning("Incorrect Move");
-                            } else {
-                                BoardGUI.alertMessageWarning("It's not your turn");
                             }
-                        }
                     }
                 });
             }
