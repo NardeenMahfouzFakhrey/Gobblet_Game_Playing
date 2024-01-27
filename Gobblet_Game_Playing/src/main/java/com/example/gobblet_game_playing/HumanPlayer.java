@@ -1,17 +1,26 @@
 package com.example.gobblet_game_playing;
 
-import java.util.Stack;
-
 public class HumanPlayer extends Player {
 
-    private GameMove currentMove = null;
     public Game.Turn[] turns = Game.Turn.values();
-    private Game.Turn myTurn = turns[playerColor.ordinal()];
+
+    /**
+     * HumanPlayer
+     * constructor
+     */
     public HumanPlayer(String name, GobbletColor gobbletColor) {
         super(name, gobbletColor);
+        myTurn = turns[playerColor.ordinal()];
     }
 
-    // Returns true if move was played and false otherwise
+
+    /**
+     * playGobbletMove
+     * test and verify the passed move and play it on the board
+     * @return boolean
+     * true if the move was valid
+     * false otherwise
+     */
     public boolean playGobbletMove(GameMove move, Board board) {
 
         if(isValidMove(move, board, myTurn)){
@@ -19,10 +28,6 @@ public class HumanPlayer extends Player {
             return true;
         }
         return false;
-
     }
-
-
-
 
 }

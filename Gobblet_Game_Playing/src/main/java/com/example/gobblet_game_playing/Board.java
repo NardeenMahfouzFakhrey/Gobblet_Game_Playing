@@ -6,12 +6,13 @@ import static com.example.gobblet_game_playing.GobbletColor.*;
 
 public class Board {
 
-    /* 2d array of stack<Gobblet> */
-    private Stack<Gobblet>[][] board;
-    private Stack<Gobblet>[][] playersGobblets;
-    private boolean isCriticalState;
+    private Stack<Gobblet>[][] board;                   /*2D array of Gobblet stack to represent the board*/
+    private Stack<Gobblet>[][] playersGobblets;         /*2 arrays of Gobblet stack to represent the gobblets stacks of each player*/
 
-    /* 4 stacks each has 4 gobblets*/
+    /**
+     * Board
+     * Constructor
+     */
     public Board() {
 
         GobbletColor[] gobbletColors = GobbletColor.values();
@@ -33,11 +34,12 @@ public class Board {
                 this.playersGobblets[i][j].push(new Gobblet(gobbletColors[i], GobbletSize.SIZE_4, -1, -1));
             }
         }
-
-        this.isCriticalState = false;
-
     }
 
+    /**
+     * Board
+     * Copy constructor
+     */
     public Board(Board board) {
 
         this.board = new Stack[4][4];
@@ -65,13 +67,16 @@ public class Board {
                 Gobblet gobblet = new Gobblet(board.getPlayersGobblets()[1][i].elementAt(j));
                 this.playersGobblets[1][i].push(gobblet);
             }
-
         }
-
-        this.isCriticalState = false;
-
     }
 
+    /**
+     * isWinningState
+     * Check if there's a winner
+     * @return
+     * the corresponding GobbletColor, if there's a winner
+     * null otherwise
+     */
     GobbletColor isWinningState(GobbletColor myGobbletColor){
         GobbletColor opponentGobbletColor = (myGobbletColor == WHITE)? BLACK:WHITE;
         boolean winFlag = false;
@@ -79,6 +84,7 @@ public class Board {
         int myScore;
         int opponentScore;
 
+        //Check Rows
         for(int i = 0; i < 4; i++) {
             myScore = 4;
             opponentScore = 4;
@@ -106,6 +112,7 @@ public class Board {
             return  myGobbletColor;
         }
 
+        //Check Columns
         for(int j = 0; j < 4; j++) {
             myScore = 4;
             opponentScore = 4;
@@ -134,6 +141,7 @@ public class Board {
             return  myGobbletColor;
         }
 
+        //Check Diagonals
         myScore = 4;
         opponentScore = 4;
         for (int i = 0; i < 4; i++) {
@@ -181,16 +189,12 @@ public class Board {
         return null;
     }
 
-
-
     /**
+     * PlayRound
      * edit the 2d array in the board
      * move the gobblet from x1,y1 to x2,y2
-     * -1,-1 means outside the board
-     * should pop from the gobblet stacks
-     *
-     * @param move
-     * @return void
+     * -1,-1 means the gobblet is off board
+     * Pop from the gobblet stacks
      */
     void playRound(GameMove move, Game.Turn currentTurn) {
         // boolean onBoard = false;
@@ -221,11 +225,8 @@ public class Board {
     }
 
     /**
-     * to get peek front gobblet at certain position
-     *
-     * @param x
-     * @param y
-     * @return Gobblet
+     * getFront
+     * @return the peek front gobblet at certain position on board
      */
     Gobblet getFront(int x, int y) {
         if (x >= 0 && x < 4 && y >= 0 && y < 4) {
@@ -240,6 +241,10 @@ public class Board {
         }
     }
 
+    /**
+     * printBoard
+     * Display the board and the gobblet stacks for testing
+     */
     void printBoard() {
 
         for (int i = 0; i < board.length; i++) {
@@ -282,11 +287,4 @@ public class Board {
         return playersGobblets;
     }
 
-    public boolean isCriticalState() {
-        return isCriticalState;
-    }
-
-    public void setCriticalState(boolean criticalState) {
-        isCriticalState = criticalState;
-    }
 }

@@ -5,14 +5,16 @@ import java.util.ArrayList;
 
 public class ComputerPlayer extends Player {
 
-    private Difficulty difficulty;
+    private Difficulty difficulty;                                          /*The difficulty level for this game*/
+    private int searchDepth;                                                /*The coresponding search depth for this difficulty level*/
+    private TreeNode currentRoot = null;                                    /*The search tree root*/
+    private GameMove bestMove;                                              /*Store the current best move to play*/
     private GobbletColor[] gobbletColors = GobbletColor.values();
-    private Game.Turn[] turns = Game.Turn.values();
-    private GameMove bestMove;
-    private int searchDepth;
-    public int pruneCounter = 0;
-    private TreeNode currentRoot = null;
 
+    /**
+     * ComputerPlayer
+     * constructor
+     */
     public ComputerPlayer(String name, GobbletColor gobbletColor, Difficulty difficulty) {
         super(name, gobbletColor);
         this.difficulty = difficulty;
@@ -25,30 +27,53 @@ public class ComputerPlayer extends Player {
         }
     }
 
-    public int getSearchDepth() {
-        return searchDepth;
-    }
 
-    public void setSearchDepth(int searchDepth) {
-        this.searchDepth = searchDepth;
-    }
-
-    // Returns move played by the computer
+    /**
+     * playGobbletMove
+     * calls the alpha-beta algorithm with iterative deepening to get the next played move
+     * @return the move played by the computer
+     */
     public GameMove playGobbletMove(Board board,Game.Turn turn) {
         bestMove = null;
         bestMove = iterativeDeepening(board,turn,searchDepth);
         return bestMove;
     }
 
+    /**
+     * iterativeDeepening
+     * calls alpha-beta algorithm till it reach the search depth limit, or it reaches a winning move
+     * @return the best move
+     */
+    public GameMove iterativeDeepening(Board board, Game.Turn turn, int maxDepth) {
+        currentRoot = new TreeNode(null, true);
+        for (int depth = 1; depth <= maxDepth; depth++) {
+            alphaBeta(board, turn, Integer.MIN_VALUE, Integer.MAX_VALUE, depth, true, currentRoot);
+            if (Game.isTurnTimeLimitExceeded() || board.isWinningState(gobbletColors[turn.ordinal()]) == gobbletColors[turn.ordinal()]) {
+                if (bestMove == null){
+                    ArrayList<GameMove> possibleMoves = generatePossibleMoves(board, turn);
+                    bestMove = possibleMoves.get(0);
+                }
+                return this.bestMove;
+            }
+        }
+        return this.bestMove;
+    }
 
+    /**
+     * generateBoardState
+     * play the passed move
+     * @return the new board
+     */
     Board generateBoardState(Board board, GameMove possibleMove, Game.Turn turn) {
-
         Board newBoardState = new Board(board);
         newBoardState.playRound(new GameMove(possibleMove), turn);
         return newBoardState;
-
     }
 
+    /**
+     * generatePossibleMoves
+     * @return all possible valid moves
+     */
     ArrayList<GameMove> generatePossibleMoves(Board myBoard, Game.Turn turn) {
 
         ArrayList<GameMove> possibleMoves = new ArrayList<>();
@@ -116,6 +141,11 @@ public class ComputerPlayer extends Player {
         return possibleMoves;
     }
 
+    /**
+     * alphaBeta
+     * alphabeta algorithm
+     * @return the returned integer value of each node
+     */
     public int alphaBeta(Board board, Game.Turn turn, int alpha, int beta, int depth, boolean isMaximizingPlayer, TreeNode treeNode) {
 
         GobbletColor winnerColor = board.isWinningState(playerColor);
@@ -165,7 +195,6 @@ public class ComputerPlayer extends Player {
 
                 alpha = Math.max(alpha, val);
                 if (beta <= alpha) {
-                    pruneCounter++;
                     break;
                 }
                 i++;
@@ -190,7 +219,6 @@ public class ComputerPlayer extends Player {
                 beta = Math.min(beta, val);
 
                 if (beta <= alpha) {
-                    pruneCounter++;
                     break;
                 }
             }
@@ -199,13 +227,14 @@ public class ComputerPlayer extends Player {
         }
     }
 
-
-    /*
+    /**
+     * evaluation
      * Number of my played Gobblets in rows, columns and diagonals compared to my opponent
      * Size of my played Gobblets in rows, columns and diagonals compared to my opponent
      * States where my opponent has one play to win in hard difficulty mode (Critical Position Heuristic)
      * Winning state increases my score with +10000 * (depth + 1)
      * Losing state decreses my score with -10000 * (depth + 1)
+     * @return the evaluation function score
      */
     public int evaluation(Board board, GobbletColor myColor, int depth) {
 
@@ -334,26 +363,13 @@ public class ComputerPlayer extends Player {
             myScore -= (10000 * (depth + 1));
         }
 
-        board.setCriticalState(criticalPosition);
-
         return myScore + sizeScore;
     }
 
-
-    public GameMove iterativeDeepening(Board board, Game.Turn turn, int maxDepth) {
-        currentRoot = new TreeNode(null, true);
-        for (int depth = 1; depth <= maxDepth; depth++) {
-            alphaBeta(board, turn, Integer.MIN_VALUE, Integer.MAX_VALUE, depth, true, currentRoot);
-            if (Game.isTurnTimeLimitExceeded() || board.isWinningState(gobbletColors[turn.ordinal()]) == gobbletColors[turn.ordinal()]) {
-                if (bestMove == null){
-                    ArrayList<GameMove> possibleMoves = generatePossibleMoves(board, turn);
-                    bestMove = possibleMoves.get(0);
-                }
-                return this.bestMove;
-            }
-        }
-        return this.bestMove;
+    public void setSearchDepth(int searchDepth) {
+        this.searchDepth = searchDepth;
     }
+
 }
 
 
